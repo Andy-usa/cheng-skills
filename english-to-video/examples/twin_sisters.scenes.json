@@ -1,0 +1,156 @@
+{
+  "characters": [
+    {
+      "name": "Mandy",
+      "frozen_ref": "Elsa",
+      "description": "12-year-old Mandy mapped to Disney Frozen's Elsa, faithful to the original Elsa Disney model, long platinum-blonde French braid, sky-blue eyes, light pastel princess dress",
+      "ref_prompt": "Character turnaround sheet of Disney Frozen's Elsa, faithfully matching the original Elsa Disney 3D model, long platinum-blonde French braid over the shoulder, sky-blue eyes, gentle warm smile, light pastel princess dress with subtle icy sparkle, full body front / 3-4 / side views, plain soft white background"
+    },
+    {
+      "name": "Sandy",
+      "frozen_ref": "Anna",
+      "description": "12-year-old Sandy mapped to Disney Frozen's Anna, twin pigtails of platinum-blonde hair to match Elsa's color, freckles, light pastel princess dress identical to Elsa's, same height as Elsa",
+      "ref_prompt": "Character turnaround sheet of Disney Frozen's Anna, faithful to the original Anna Disney 3D model, twin pigtails of platinum-blonde hair recolored to match Elsa, large bright eyes, freckles, light pastel princess dress identical to Elsa's, same height as Elsa, full body front / 3-4 / side views, plain soft white background"
+    },
+    {
+      "name": "Mr Brown",
+      "frozen_ref": "Kristoff",
+      "description": "Disney Frozen's Kristoff restyled as a school PE teacher, short tousled brown hair, casual sporty track jacket with whistle, kind but firm expression",
+      "ref_prompt": "Character turnaround sheet of Disney Frozen's Kristoff restyled as a PE teacher, faithful to the original Kristoff Disney 3D model, short tousled brown hair, casual sporty navy track jacket, silver whistle around neck, kind but firm expression, full body front / 3-4 / side views, plain soft white background"
+    }
+  ],
+  "locations": [
+    {
+      "name": "frozen castle courtyard",
+      "description": "Snowy courtyard of an ice-castle school: pale stone arches dusted with snow, pale blue sky, soft sunlight",
+      "ref_prompt": "Establishing wide shot of a fairytale ice-castle school courtyard, pale stone arches dusted with snow, soft sunlight, pale blue sky with light clouds, no characters"
+    },
+    {
+      "name": "frozen sports field",
+      "description": "Winter outdoor sports field: green lawn dusted with snow, ice-castle school in distance, pale sky",
+      "ref_prompt": "Establishing wide shot of a winter school sports field for an ice-castle school, green lawn lightly dusted with snow, ice-castle school building in the distance with frosted spires, pale blue sky, no characters"
+    }
+  ],
+  "scenes": [
+    {
+      "text": "Mandy and Sandy are twin sisters.",
+      "prompt": "Wide shot, ice castle courtyard scene, Elsa and Anna standing side by side, two blonde princesses, identical body shape and height, matching light pastel long dresses, gentle gaze at each other, fresh winter setting, soft natural light",
+      "char_ref": "Mandy",
+      "loc_ref": "frozen castle courtyard"
+    },
+    {
+      "text": "They both have long blonde hair",
+      "prompt": "Medium close-up, detailed rendering of Elsa's long blonde hair, smooth golden flowing hair, delicate features, ice castle background, soft diffuse light, fairytale color palette, high-detail",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "and are of the same height.",
+      "prompt": "Full-body shot, Anna standing upright, standard balanced height proportions, elegant posture, castle terrace scene, pale blue icy color tone, beautiful atmosphere",
+      "char_ref": "Sandy",
+      "loc_ref": null
+    },
+    {
+      "text": "They usually wear the same dresses.",
+      "prompt": "Two-character medium shot, Elsa and Anna wearing identical princess dresses, exact same style and colors, walking side by side along a castle hallway, warm soft indoor lighting, cute and playful",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "They look the same",
+      "prompt": "Two-character front shot, Elsa and Anna with very similar facial features, near-identical faces, smiling at each other side by side, distant icy forest background, cinematic composition",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "and study in the same middle school.",
+      "prompt": "Wide establishing shot, grand ice-castle school complex, Elsa and Anna walking together into the campus, fairytale school scene, snow-dusted environment",
+      "char_ref": "Mandy",
+      "loc_ref": "frozen castle courtyard"
+    },
+    {
+      "text": "Although they aren't in the same class,",
+      "prompt": "Split-screen left/right comparison, Elsa walking into one classroom door and Anna into another with different room signs, same school different classes, soft cool color tone, school hallway, fine detail",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "they have the same PE teacher, Mr Brown.",
+      "prompt": "Medium shot of the character, Disney Frozen's Kristoff restyled as a PE teacher, short brown hair, casual sporty outfit, gentle but serious expression, sports field background",
+      "char_ref": "Mr Brown",
+      "loc_ref": "frozen sports field"
+    },
+    {
+      "text": "It is the first PE class.",
+      "prompt": "Wide shot of the sports field, winter outdoor athletic ground, green lawn mixed with snow, PE class scene set up, open beautiful environment, cinematic feel",
+      "char_ref": null,
+      "loc_ref": "frozen sports field"
+    },
+    {
+      "text": "Mandy and her classmates go to the PE class.",
+      "prompt": "Group medium shot, Elsa walking on the sports field with a small group of friends, going together to PE class, lively child-like motion, relaxed cheerful atmosphere",
+      "char_ref": "Mandy",
+      "loc_ref": "frozen sports field"
+    },
+    {
+      "text": "The class begins.",
+      "prompt": "Close shot, sports field ground, PE class formally begins, sunlight falling on the ground, clean simple outdoor scene, soft layered light",
+      "char_ref": null,
+      "loc_ref": "frozen sports field"
+    },
+    {
+      "text": "But when Mr Brown sees her, he is very surprised",
+      "prompt": "Close-up, the PE teacher Kristoff frowns with a surprised expression, gaze directed at Elsa in front of him, puzzled look, lively exaggerated expression",
+      "char_ref": "Mr Brown",
+      "loc_ref": null
+    },
+    {
+      "text": "and says to her,",
+      "prompt": "Two-shot dialogue, the PE teacher facing Elsa, raising his hand in puzzled question, natural body language, blurred sports field background, focus on the interaction between characters",
+      "char_ref": "Mr Brown",
+      "loc_ref": null
+    },
+    {
+      "text": "\"You had my class just now. Why come again?\"",
+      "prompt": "Character close-up, the PE teacher speaking with a confused look, perplexed expression, outdoor natural light on the character, delicate Disney facial expression rendering",
+      "char_ref": "Mr Brown",
+      "loc_ref": null
+    },
+    {
+      "text": "Mandy is also very surprised to hear this,",
+      "prompt": "Front close-up of Elsa, completely surprised expression, eyes wide open, cute slightly stunned look, soft pale icy background",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "but she understands soon.",
+      "prompt": "Half-body shot of Elsa, sudden realization expression, lively eyes, natural emotional shift from surprise to understanding, fairytale color palette",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "She smiles and says,",
+      "prompt": "Elsa smiling in three-quarter view, gentle polite smile, elegant temperament, winter sports field surroundings, soft atmosphere, cinematic still feel",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "\"Mr Brown, you may have made a mistake.\"",
+      "prompt": "Interactive medium shot, Elsa calmly explaining to the PE teacher, relaxed body language, natural communication posture, fresh and healing visual",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "\"I have a twin sister.\"",
+      "prompt": "Memory-feel wide shot, Anna's blurred figure appearing softly in the corner of the frame, suggesting the twin-sister setup, dreamy beautiful effect",
+      "char_ref": "Sandy",
+      "loc_ref": "frozen sports field"
+    },
+    {
+      "text": "Mandy and Sandy are twin sisters!",
+      "prompt": "Closing two-character shot, the PE teacher smiling with sudden realization, Elsa standing calmly, with Anna joining beside her, winter sports field wide shot ending, complete and harmonious frame, cute and healing",
+      "char_ref": "Mandy",
+      "loc_ref": "frozen sports field"
+    }
+  ]
+}

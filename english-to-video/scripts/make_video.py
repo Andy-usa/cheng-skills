@@ -64,13 +64,16 @@ DRM_RES   = "2k"
 DEFAULT_CONCURRENCY = 6
 DEFAULT_CANDIDATES  = 3
 
-# Visual style: Eggy Party (蛋仔派对) — chibi, round, cute, kid-friendly
+# Visual style: Frozen (冰雪奇缘) — Disney 3D cartoon, cinematic, kid-friendly.
+# Characters are mapped onto the Frozen cast (Elsa / Anna / Kristoff / etc.)
+# at planning time so the storyboards can ride on the original Disney models.
 STYLE_SUFFIX = (
-    "Eggy Party style chibi cartoon, round egg-shaped bodies, "
-    "oversized cute big shiny eyes, large heads, soft pastel candy colors, "
-    "bright cheerful kawaii aesthetic, smooth 3D-rendered look, "
-    "adorable kid-friendly character art, vibrant and playful, "
-    "clean clear composition with subject centered and upper-framed "
+    "Frozen movie style, Disney 3D cartoon, cinematic lighting, 16:9, "
+    "high detail, ultra-HD rendering, soft icy snow texture, "
+    "beautiful fairytale scenery, characters faithfully matching the "
+    "original Frozen Disney models, vivid and playful composition, "
+    "children-animation quality, cinematic film-still framing, "
+    "subject centered and upper-framed "
     "(leave bottom 25% of frame empty for subtitle)"
 )
 

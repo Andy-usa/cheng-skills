@@ -2,7 +2,7 @@
 name: english-to-video
 description: |
   把一段英语短文（图片或纯文字均可）转成带 Jenny 女声旁白、慢速清晰朗读、烧录字幕的小学生英语学习视频。
-  适合小学/初一英语短文，使用蛋仔派对（Eggy Party）Q 萌画风。
+  适合小学/初一英语短文，使用冰雪奇缘（Frozen）迪士尼 3D 电影画风，把课文角色映射到艾莎 / 安娜 / 克里斯托夫等原版人物身上。
   触发词：英语视频、英文视频、生成英语视频、英语短文视频、英文教学视频、把这篇英语做成视频。
   即使用户只是说"做成视频"并附上一段英文（图片 or 文字）也应触发。
 permissions:
@@ -11,9 +11,9 @@ permissions:
   file_write: [~/english_lessons/]
 ---
 
-# English → Video Skill (v4)
+# English → Video Skill (v5)
 
-把任意英语短文转成 Q 萌动画视频：**Jenny 女声慢读 + 烧录字幕 + 蛋仔派对 Q 萌人物 + 静态切镜**。
+把任意英语短文转成迪士尼电影感动画视频：**Jenny 女声慢读 + 烧录字幕 + 冰雪奇缘原版角色 + 静态切镜**。
 
 ## 核心理念
 
@@ -21,7 +21,7 @@ permissions:
 - **N 个候选并发生图**：每个分镜并发生 N 张候选（默认 3 张），任意一张成功即可——单点失败不再卡住整体
 - **静态切镜，无 Ken Burns**：缩放/平移会裁掉底部字幕，已禁用
 - **Jenny 慢速旁白**：edge-tts `en-US-JennyNeural` 优先；不可用时自动 fallback 到百炼 Cherry + ffmpeg 减速
-- **蛋仔派对画风**：圆润、糖果色、大眼睛 Q 萌，对小朋友吸引力大
+- **冰雪奇缘画风**：迪士尼 3D 卡通、电影级光影、唯美童话，课文里的人物映射到艾莎 / 安娜 / 克里斯托夫等原版角色，借力 Disney 模型一致性
 - **审稿步骤**：scenes.json 出来后先和用户对一遍 prompt 再开跑
 
 ## 核心脚本
@@ -56,11 +56,13 @@ python3 .../make_video.py <out_dir> --json scenes.json --phase all      # 一把
 
 提取后**和用户确认一遍**，文字模糊或不全时先问清楚再继续。
 
-### Step 2：识别人物 + 场景
+### Step 2：识别人物 + 场景 + 冰雪奇缘映射
 
 读完原文，列出：
-- **角色**：姓名、外貌（年龄/发色/眼睛/身材/服装）。原文里没明说的（比如"a teacher"），自己补合理设定
-- **场景地点**：教室、运动场、家、公园 等
+- **角色**：姓名、外貌（年龄/发色/眼睛/身材/服装），并把每个角色**映射到冰雪奇缘原版人物**（艾莎 Elsa、安娜 Anna、克里斯托夫 Kristoff、奥拉夫 Olaf、雪宝 Sven 等）。原文里没明说的（比如"a teacher"），用 Frozen 里的角色改写适配
+- **场景地点**：教室、运动场、家、公园 等。背景统一往冰雪城堡 / 冬日校园 / 冰雪森林 这种 Frozen 世界靠
+
+> 例：双胞胎姐妹 Mandy & Sandy → 艾莎 + 安娜（金发同身高）；体育老师 Mr Brown → 克里斯托夫换装体育老师造型（棕短发 + 休闲运动穿搭）
 
 ### Step 3：精细化分镜规划（关键）
 
@@ -86,11 +88,17 @@ python3 .../make_video.py <out_dir> --json scenes.json --phase all      # 一把
 
 ### Step 4：写 scenes.json
 
+**统一固定后缀（每条 prompt 末尾会自动追加 `STYLE_SUFFIX`，等价于以下中文表述）：**
+
+> 冰雪奇缘电影画风，迪士尼 3D 卡通，电影级光影，16:9，高细节，超清渲染，柔和冰雪质感，唯美童话场景，角色高度还原冰雪奇缘原版人物，画面生动童趣，儿童动画质感，电影抽帧镜头感
+
+所以你写每条 `prompt` 时**不要**重复这串后缀——`make_video.py` 已经在最后拼好。只写**这一镜独有**的内容（人物、动作、表情、镜头、环境）。
+
 **人物 prompt 要求：**
 
-- 蛋仔派对画风必须显式写在 `ref_prompt` 里
+- 角色 `ref_prompt` 显式声明所映射的冰雪奇缘原版人物（艾莎 / 安娜 / 克里斯托夫 / ……）
 - 描述要具体：年龄、发型/发色、眼睛颜色、服装、表情
-- 多个场景出现的同一人，描述要保持一致
+- 多个场景出现的同一人，描述要保持一致（同一套服饰、同一发型）
 
 **JSON 模板：**
 
@@ -99,21 +107,34 @@ python3 .../make_video.py <out_dir> --json scenes.json --phase all      # 一把
   "characters": [
     {
       "name": "Mandy",
-      "description": "12-year-old girl, long golden blonde hair in twin braids, big sky-blue shiny eyes, rosy round cheeks, sweet warm smile, navy-and-white sailor school uniform with red bow tie",
-      "ref_prompt": "Character turnaround sheet of a 12-year-old girl, Eggy Party style chibi cartoon, round egg-shaped body, oversized cute big sky-blue shiny eyes, large head, long golden blonde hair in twin braids, rosy round cheeks, navy-and-white sailor school uniform with red bow tie, sweet warm smile, full body front / 3-4 / side views, plain white background, soft pastel candy colors"
+      "frozen_ref": "Elsa",
+      "description": "12-year-old girl mapped to Disney's Elsa from Frozen, faithfully matching the original Elsa Disney 3D model, long platinum-blonde French braid over the shoulder, large sky-blue eyes, gentle warm smile, light icy-blue princess dress",
+      "ref_prompt": "Character turnaround sheet of Disney Frozen's Elsa, Frozen movie style, Disney 3D cartoon, faithful to the original Elsa model, long platinum-blonde French braid, sky-blue eyes, light icy-blue princess dress, gentle warm smile, full body front / 3-4 / side views, plain soft white background, cinematic lighting"
+    },
+    {
+      "name": "Sandy",
+      "frozen_ref": "Anna",
+      "description": "12-year-old girl mapped to Disney's Anna from Frozen, twin-pigtails strawberry-blonde hair (re-colored to match Elsa's blonde for the twin look), bright teal-green eyes, freckles, light pastel princess dress matching Elsa's, same height as Elsa",
+      "ref_prompt": "Character turnaround sheet of Disney Frozen's Anna, Frozen movie style, Disney 3D cartoon, faithful to the original Anna model, twin pigtails of platinum-blonde hair to match Elsa, large bright eyes, freckles, light pastel princess dress identical to Elsa's, same height as Elsa, full body front / 3-4 / side views, plain soft white background, cinematic lighting"
+    },
+    {
+      "name": "Mr Brown",
+      "frozen_ref": "Kristoff",
+      "description": "Disney's Kristoff from Frozen, restyled as a school PE teacher, short brown hair, casual sporty outfit (track jacket + whistle), kind but firm expression",
+      "ref_prompt": "Character turnaround sheet of Disney Frozen's Kristoff restyled as a PE teacher, Frozen movie style, Disney 3D cartoon, faithful to the original Kristoff model, short brown hair, casual sporty track jacket with whistle around neck, kind but firm expression, full body front / 3-4 / side views, plain soft white background, cinematic lighting"
     }
   ],
   "locations": [
     {
-      "name": "school sports field",
-      "description": "Sunny school sports field with red running track and lush green grass",
-      "ref_prompt": "Establishing wide shot of a sunny school sports field, Eggy Party style cartoon background, lush vibrant green grass, red running track curving around, white goal posts in distance, modern school building with red roof, bright blue sky with fluffy clouds, no characters, soft pastel candy colors, kid-friendly kawaii aesthetic"
+      "name": "frozen school sports field",
+      "description": "Winter outdoor sports field of a fairytale ice-castle school: green lawn dusted with snow, soft sunlight through cool air",
+      "ref_prompt": "Establishing wide shot of a fairytale winter school sports field, Frozen movie style background, green lawn lightly dusted with snow, ice-castle school building in the distance with frosted spires, pale blue sky, no characters, cinematic lighting"
     }
   ],
   "scenes": [
     {
       "text": "Mandy and Sandy are twin sisters.",
-      "prompt": "Wide shot, two identical 12-year-old twin girls Mandy and Sandy standing side by side smiling warmly at camera, both with long golden blonde hair in twin braids, sky-blue shiny eyes, rosy cheeks, matching navy-white sailor uniforms with red bow ties, arms gently around each other, sunny school courtyard with cherry blossoms, vibrant warm colors",
+      "prompt": "Wide shot, courtyard of an ice castle, Elsa and Anna standing shoulder to shoulder, both blonde, identical height, matching light pastel princess dresses, warm gaze at each other, fresh winter setting, soft natural light",
       "char_ref": "Mandy",
       "loc_ref": null
     }
@@ -166,7 +187,8 @@ python3 .../make_video.py <dir> --json scenes.json --phase tts
 | 有角色 + 动作 + 表情 | 重生 |
 | 角色外貌一致 | 重生时强化外貌描述 |
 | 主体在画面**上 75%**，底部留白 | 重生（默认 STYLE_SUFFIX 已声明此约束） |
-| 蛋仔派对 Q 萌画风 | 检查 prompt 是否漏了 style |
+| 冰雪奇缘电影画风 | 检查 prompt 是否漏了 style，或映射到的 Frozen 角色不对 |
+| 角色还原冰雪奇缘原版人物 | 重生时强化 "faithful to original Disney model" |
 
 替换某张图：`cp images/s05_c2.jpg images/s05.jpg` 即可（Phase 4 用 `s05.jpg`）。
 
@@ -267,3 +289,12 @@ lark-cli im +messages-send --as bot --user-id "$USER_OPEN_ID" \
 ```
 
 (lark-cli 要在 `final/` 目录下跑，`--video` / `--video-cover` 必须传**相对路径**)
+
+---
+
+## 示例参考
+
+写新课文时可以拿现成的样板对照改写：
+
+- [`examples/twin_sisters_20shots.md`](examples/twin_sisters_20shots.md) — 「双胞胎姐妹 + 体育老师」20 镜冰雪奇缘模板，含统一固定参数 + 角色映射 + 镜头序列
+- [`examples/twin_sisters.scenes.json`](examples/twin_sisters.scenes.json) — 同一课文的机读版 scenes.json，可直接 `python3 scripts/make_video.py <out_dir> --json examples/twin_sisters.scenes.json --phase all` 起跑

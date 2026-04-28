@@ -191,8 +191,11 @@ python3 ~/.agents/skills/wechat-to-lark/scripts/transcribe.py "视频URL"
 lark-cli docs +create --title "标题" --markdown @feishu_mini.md
 # 输出 JSON 中含 doc_id / doc_url，记录用于下一步
 
-# 3. 用完整内容覆盖
-lark-cli docs +update --doc "{doc_id}" --mode overwrite --markdown @feishu_article.md
+# 3. 用完整内容覆盖（必须用 v2 API，v1 在多图时会卡 async 队列且各种 503）
+lark-cli docs +update --api-version v2 \
+  --doc "{doc_id}" \
+  --command overwrite --doc-format markdown \
+  --content @feishu_article.md
 
 # 4. 给用户飞书私聊推送链接（必做）
 USER_ID=$(lark-cli auth status | python3 -c "import sys,json;print(json.load(sys.stdin)['userOpenId'])")
@@ -206,9 +209,9 @@ rm -f ~/feishu_article.md ~/feishu_mini.md
 ```
 
 注意：
-- `--markdown` 使用 `@文件名` 语法传入，文件名必须是相对路径
+- `--markdown` / `--content` 使用 `@文件名` 语法传入，文件名必须是相对路径
 - 临时文件写到用户主目录 `~/`，用完即删
-- 如果 lark-cli 返回 `"status": "running"` 和 `task_id`，再执行一次同样的命令即可获取最终结果
+- **图片不要丢**：用 v2 API（`--api-version v2`）即可一次性同步处理 30+ 张图；v1 API 在 ≥10 张图时会进入 async 队列且经常卡死
 - **必须用 `--as bot` 发消息**：用户身份发送需要 `im:message.send_as_user` scope（默认未授予且需企业管理员审批）；bot 身份只需要 `im:message`，默认就有
 - 视频号视频走同样流程，第 4 步消息把"来源"换成视频号名 + 转写耗时
 

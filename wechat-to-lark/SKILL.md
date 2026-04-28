@@ -180,44 +180,53 @@ python3 ~/.agents/skills/wechat-to-lark/scripts/transcribe.py "视频URL"
 
 ---
 
-## 通用步骤：写入飞书文档
+## 通用步骤：写入飞书文档 + 推送通知
 
-两步法创建（避免大文档 async 超时）：
+四步流程（避免大文档 async 超时 + 写完给用户发飞书私聊提醒）：
 
 ```bash
 # 1. 用 Write 工具将内容写入 ~/feishu_article.md，占位内容写入 ~/feishu_mini.md
 
 # 2. 创建占位文档
 lark-cli docs +create --title "标题" --markdown @feishu_mini.md
+# 输出 JSON 中含 doc_id / doc_url，记录用于下一步
 
-# 3. 用完整内容覆盖
-lark-cli docs +update --doc "{doc_id}" --mode overwrite --markdown @feishu_article.md
+# 3. 用完整内容覆盖（必须用 v2 API，v1 在多图时会卡 async 队列且各种 503）
+lark-cli docs +update --api-version v2 \
+  --doc "{doc_id}" \
+  --command overwrite --doc-format markdown \
+  --content @feishu_article.md
 
-# 4. 清理临时文件
+# 4. 给用户飞书私聊推送链接（必做）
+USER_ID=$(lark-cli auth status | python3 -c "import sys,json;print(json.load(sys.stdin)['userOpenId'])")
+lark-cli im +messages-send --as bot --user-id "$USER_ID" --markdown \
+  "已保存到飞书文档：[《标题》]({doc_url})
+
+来源：公众号名称 · 发布时间"
+
+# 5. 清理临时文件
 rm -f ~/feishu_article.md ~/feishu_mini.md
 ```
 
 注意：
-- `--markdown` 使用 `@文件名` 语法传入，文件名必须是相对路径
+- `--markdown` / `--content` 使用 `@文件名` 语法传入，文件名必须是相对路径
 - 临时文件写到用户主目录 `~/`，用完即删
-- 如果 lark-cli 返回 `"status": "running"` 和 `task_id`，再执行一次同样的命令即可获取最终结果
+- **图片不要丢**：用 v2 API（`--api-version v2`）即可一次性同步处理 30+ 张图；v1 API 在 ≥10 张图时会进入 async 队列且经常卡死
+- **必须用 `--as bot` 发消息**：用户身份发送需要 `im:message.send_as_user` scope（默认未授予且需企业管理员审批）；bot 身份只需要 `im:message`，默认就有
+- 视频号视频走同样流程，第 4 步消息把"来源"换成视频号名 + 转写耗时
 
 ## 返回结果
 
+向用户回复时简短确认（**完整链接已通过飞书私聊推送**，正文不必重复链接）：
+
 **公众号文章：**
 ```
-已创建飞书文档：
-标题：《文章标题》
-来源：公众号名称
-链接：https://xxx.feishu.cn/docx/xxx
+已保存到飞书并发送提醒：《文章标题》（来源：xxx）
 ```
 
 **视频号视频：**
 ```
-已创建飞书文档：
-标题：《文章标题》
-转写耗时：XX 秒
-链接：https://xxx.feishu.cn/docx/xxx
+已保存到飞书并发送提醒：《文章标题》（转写耗时 XX 秒）
 ```
 
 ## 错误处理

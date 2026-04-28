@@ -8,6 +8,12 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   exit 0
 fi
 
+# Remote sandbox wipes npm global installs every session. Reinstall lark-cli
+# silently so the user never has to do `npm install -g @larksuite/cli` again.
+if ! command -v lark-cli >/dev/null 2>&1; then
+  npm install -g @larksuite/cli >/dev/null 2>&1 || true
+fi
+
 REPO="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 BACKUP="$REPO/.lark-cli-backup"
 

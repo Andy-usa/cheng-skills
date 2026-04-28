@@ -17,12 +17,12 @@ permissions:
 
 ## 核心理念
 
-- **每 ~2 秒切一镜**：视频不能呆板，长句子要切成多个分镜（不再"一句一镜"）
+- **旁白驱动分镜**：先把整段旁白拆成 ~2 秒一段的"口播条"，每条口播条对应**一张分镜图**——分镜数量、节奏、字幕都由音频决定，反过来不行
+- **分镜图既要好玩又要解释内容**：同时承担两个任务——(1) 蛋仔派对的趣味画风（圆滚滚 / 大眼睛 / 糖果色 / 道具夸张），让小朋友想看；(2) 直白地把这一段旁白说的事情画出来（人物、动作、表情、关键道具），让他能"看懂"英语
 - **N 个候选并发生图**：每个分镜并发生 N 张候选（默认 3 张），任意一张成功即可——单点失败不再卡住整体
 - **静态切镜，无 Ken Burns**：缩放/平移会裁掉底部字幕，已禁用
 - **Jenny 慢速旁白**：edge-tts `en-US-JennyNeural` 优先；不可用时自动 fallback 到百炼 Cherry + ffmpeg 减速
-- **蛋仔派对画风**：圆润、糖果色、大眼睛 Q 萌，对小朋友吸引力大
-- **审稿步骤**：scenes.json 出来后先和用户对一遍 prompt 再开跑
+- **审稿步骤**：旁白拆分 + scenes.json 出来后先和用户对一遍再开跑
 
 ## 核心脚本
 
@@ -62,29 +62,44 @@ python3 .../make_video.py <out_dir> --json scenes.json --phase all      # 一把
 - **角色**：姓名、外貌（年龄/发色/眼睛/身材/服装）。原文里没明说的（比如"a teacher"），自己补合理设定
 - **场景地点**：教室、运动场、家、公园 等
 
-### Step 3：精细化分镜规划（关键）
+### Step 3：⚠️ 旁白文稿拆分（关键，第一类工作流步骤）
 
-**目标：每个分镜对应约 2 秒音频**，不再"一句一镜"。把长句子按短语切：
+**这一步在写 scenes.json 之前必做**——决定整个视频的节奏。
+
+**做法**：把整段英文按"自然朗读节奏"切成 ~2 秒一段的"口播条"。每段长度上限大约 12 个英文单词；优先在标点（逗号、句号、引号、连接词 and/but/so 之前）处下刀。每段的文字 = 那张分镜图要烧的字幕 = 那段旁白朗读的内容（一一对应）。
+
+**输出**：一张拆分表，列给用户审。例如这段：
 
 > "But when Mr Brown sees her, he is very surprised and says to her, 'You had my class just now. Why do you come to my class again?'"
 
-切成 5 个分镜：
+应该拆成：
 
-1. "But when Mr Brown sees her,"
-2. "he is very surprised"
-3. "and says to her,"
-4. "'You had my class just now.'"
-5. "'Why do you come to my class again?'"
+| # | 旁白片段 | 估算时长 | 这张图要画什么 |
+|---|---|---|---|
+| 1 | But when Mr Brown sees her, | ~1.8s | Mr Brown 视线刚扫到 Mandy，目光停留 |
+| 2 | he is very surprised | ~1.5s | Mr Brown 张嘴瞪眼夸张惊讶表情特写 |
+| 3 | and says to her, | ~1.3s | Mr Brown 指着 Mandy 准备说话 |
+| 4 | "You had my class just now." | ~2.4s | 对话气泡 + Mr Brown 困惑指 Mandy |
+| 5 | "Why do you come to my class again?" | ~2.8s | Mandy 一脸懵 + Mr Brown 摊手 |
 
-每个分镜：
-- 是一个**独立的视觉时刻**，prompt 描述该时刻该看到什么
-- text 是要朗读 + 烧字幕的那段（短，≤ 12 词最好）
-- 标注用哪个角色 ref / 场景 ref（i2i 一致性的根据）
+**用户拍板这张表后，再进 Step 4**。
+
+> 时长估算可以粗算（每英文音节 ~0.18s @ 慢速朗读），不需要精确——下游 ffmpeg 会按实际 TTS 时长对齐画面。
+
+### Step 4：每个口播条配画面 prompt
+
+针对 Step 3 拆出的每一条，写 `prompt`：
+
+- **要包含两层信息**：
+  1. **蛋仔派对趣味画风**：圆滚滚 chibi、大眼睛、糖果色、夸张道具/表情、kawaii 氛围
+  2. **直白解释这条旁白**：这段说"surprised"就一定要画到那个表情；说"red apple"就一定要有红苹果道具
 - 镜头要求（close-up / medium / wide / low angle / over-shoulder）
-- 表情/动作（surprised, smiling, pointing）
-- 必要的环境细节（cherry blossoms, sunlight from left, etc.）
+- 角色动作 + 表情 + 关键道具
+- 必要的环境细节（cherry blossoms / morning sunlight）
+- 标注用哪个角色 ref / 场景 ref（image2image 的一致性根据）
+- 显式写"leave bottom 25% of frame empty for subtitle"——主体往上移、底部留白给字幕
 
-### Step 4：写 scenes.json
+### Step 4.5：写 scenes.json
 
 **人物 prompt 要求：**
 
@@ -123,12 +138,20 @@ python3 .../make_video.py <out_dir> --json scenes.json --phase all      # 一把
 
 ### Step 5：⚠️ 提示词审稿（必做）
 
-把 scenes.json 写好后，**在跑 Phase 1 之前**，把所有 `ref_prompt` 和 `prompt` 列给用户过一遍：
+把 scenes.json 写好后，**在跑 Phase 1 之前**，把以下两件事都列给用户过一遍：
 
-- 是否每个 prompt 包含蛋仔派对画风？
+**(a) 旁白拆分表**（来自 Step 3）：
+- 每段是不是 ≤ 12 词？
+- 切点是不是落在标点 / 连接词处？
+- 哪段太长读着吃力？哪段太短显得碎？
+
+**(b) 每张分镜的 prompt**：
+
+- 是否包含蛋仔派对画风（chibi / 圆滚滚 / 糖果色 / 大眼睛）？
+- 是否直白画出了对应旁白的内容（关键词都映射到画面元素了吗）？
+- 是否写了 "leave bottom 25% of frame empty for subtitle"？
 - 角色描述是否在每个场景重复了完整外貌？
-- 每个分镜是否有明确动作 / 表情 / 镜头？
-- 是否有空镜（只有背景没角色）？
+- 是否有空镜（只有背景没角色没动作）？
 
 用户拍板后再开跑。
 

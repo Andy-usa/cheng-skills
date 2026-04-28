@@ -9,13 +9,14 @@ Usage:
   python3 make_video.py <output_dir> --json <scenes.json> --phase all
 """
 
-import asyncio, json, os, subprocess, sys, urllib.request, textwrap, random
+import asyncio, json, os, subprocess, sys, time, urllib.request, textwrap, random
 from PIL import Image, ImageDraw, ImageFont
 
 CANVAS_W, CANVAS_H = 1920, 1080
 FPS = 25
-TTS_VOICE  = "en-US-JennyNeural"
-TTS_RATE   = "-8%"
+# TTS: Bailian qwen3-tts-flash (works in sandboxes that block speech.platform.bing.com).
+# Voices: "Cherry" (warm female English), "Ethan" (male English), "Serena" (calm female).
+TTS_VOICE  = "Cherry"
 DRM_MODEL  = "5.0"
 DRM_RES    = "2k"
 
@@ -84,12 +85,56 @@ def run_i2i(ref, prompt, out_path, ratio="16:9"):
         return run_t2i(prompt, out_path, ratio)
 
 
-# ── TTS ───────────────────────────────────────────────────────────────────────
+# ── TTS (Bailian qwen3-tts-flash) ─────────────────────────────────────────────
+
+def _tts_bailian_sync(text, mp3_path):
+    """Generate mp3 via Bailian qwen3-tts-flash. Returns once mp3 is written."""
+    import urllib.error
+    api_key = os.environ.get("DASHSCOPE_API_KEY")
+    if not api_key:
+        raise RuntimeError("DASHSCOPE_API_KEY not set; cannot synthesize speech")
+    endpoint = ("https://dashscope.aliyuncs.com/api/v1/services/"
+                "aigc/multimodal-generation/generation")
+    payload = {
+        "model": "qwen3-tts-flash",
+        "input": {"text": text, "voice": TTS_VOICE},
+        "parameters": {"language_type": "English"},
+    }
+    req = urllib.request.Request(
+        endpoint,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Authorization": f"Bearer {api_key}",
+                 "Content-Type": "application/json"},
+        method="POST",
+    )
+    last_err = None
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                data = json.loads(r.read().decode("utf-8"))
+            url = data["output"]["audio"]["url"]
+            # Download wav, convert to mp3 in one ffmpeg call.
+            tmp_wav = mp3_path + ".wav.tmp"
+            urllib.request.urlretrieve(url, tmp_wav)
+            subprocess.run(
+                ["ffmpeg", "-y", "-loglevel", "error",
+                 "-i", tmp_wav, "-codec:a", "libmp3lame",
+                 "-qscale:a", "2", mp3_path],
+                check=True,
+            )
+            os.remove(tmp_wav)
+            return
+        except (urllib.error.HTTPError, urllib.error.URLError,
+                KeyError, subprocess.CalledProcessError) as e:
+            last_err = e
+            time.sleep(2 ** attempt)
+    raise RuntimeError(f"TTS failed after retries: {last_err}")
 
 async def tts(text, path):
-    if os.path.exists(path): return
-    import edge_tts
-    await edge_tts.Communicate(text, voice=TTS_VOICE, rate=TTS_RATE).save(path)
+    if os.path.exists(path) and os.path.getsize(path) > 0:
+        return
+    # Run sync TTS in a thread so caller's async semantics still work.
+    await asyncio.to_thread(_tts_bailian_sync, text, path)
 
 def get_duration(path):
     r = subprocess.run(
@@ -107,7 +152,10 @@ def burn_subtitle(img_path, text, out_path):
     for fp in ["/System/Library/Fonts/Helvetica.ttc",
                "/System/Library/Fonts/Arial.ttf",
                "/Library/Fonts/Arial.ttf",
-               "/System/Library/Fonts/Supplemental/Arial.ttf"]:
+               "/System/Library/Fonts/Supplemental/Arial.ttf",
+               "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+               "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+               "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf"]:
         if os.path.exists(fp):
             try: font = ImageFont.truetype(fp, 40); break
             except: pass
@@ -251,7 +299,10 @@ def phase_video(plan, audio_dir, img_dir, sub_dir, clips_dir, final_dir):
     ok = concat_clips(clip_paths, final)
     if ok:
         print(f"\n✅  {final}")
-        subprocess.run(["open", final])
+        try:
+            subprocess.run(["open", final], check=False)  # macOS only; harmless on Linux
+        except FileNotFoundError:
+            pass
     else:
         print("❌ Concat failed")
 

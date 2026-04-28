@@ -158,9 +158,34 @@ python3 ~/cheng-skills/wechat-to-lark/scripts/transcribe.py "视频URL"
 - 作者的个人用语风格
 - 段落结构、叙事顺序、观点
 
-**段落整理：**
-- ASR 返回的是大段连续文字，需要按语义切分自然段
-- 适当加 `## 小标题` 让长文易读
+**段落整理（重点：保持口播稿的一体感）：**
+
+视频是一段口播稿，不是一篇结构化文章。**默认不加任何 `##`/`###` 小标题**——只用空行分段、只用排版手段做层次。
+
+具体做法：
+- 按语义切自然段，每段一个空行隔开。一段一个意思，**3–5 句话最舒服**
+- 句子内部是连贯的口语流，**不要在句子中间硬加标题**
+- 强调用 `**加粗**`，金句用 `> 引用块`，结构性的并列项可以用 `1.`/`2.`/`-` 的列表
+- 篇章级别的话题切换（比如从"问题"到"解决方案"、从"现象"到"反思"）才用 `---` 分割线，**全文最多 1–2 处**
+- **绝对不要** 把口播里"第一点、第二点、第三点"这种顺口的列举提升成 `## 第一件事`/`## 第二件事`——保持原文的"我下面要讲三点"的叙述感更好读
+
+只有这两种情况可以用 `##`：
+1. 视频本身就是结构化讲解（例如教程、SOP、列表式内容），且分段在原文中清晰可辨
+2. 篇幅特别长（>10 分钟），不分章节难以扫读
+
+**反例（不要这样）：**
+```markdown
+## 引子
+## 教育的本质
+## 第一件事：强调"我"
+## 第二件事：AI 原生思维
+## 总结
+```
+
+**正例（这样）：**
+- 文档标题是文章主标题
+- 正文一气呵成，自然分段
+- 偶尔用 `**加粗**` 拎金句、用 `>` 引出原话
 
 ### B3. 生成标题
 
@@ -177,7 +202,7 @@ lark-cli auth status     # tokenStatus 应该是 "valid"
 lark-cli auth list       # 拿到当前 user 的 userOpenId（用于推消息）
 ```
 
-**如果未登录**：本仓库已经配了 SessionStart hook，会自动从 `.lark-cli-backup/` 还原 token。如果还原失败（比如首次使用、token 失效），按提示 `lark-cli config init --new` + `lark-cli auth login --recommend`，每次只是首次 setup，之后跨 session 都不用重做。
+**如果未登录**：用户级 `~/.claude/` 已经配了 SessionStart hook，每次 session 启动都会自动还原 token，**全局生效不依赖任何仓库分支**。详见本文末尾「跨 Session 持久化」。
 
 ### 2. 写入文档（两步法，避免大文档 async 超时）
 
@@ -257,8 +282,25 @@ emoji 选择：公众号文章用 📰；视频转写用 📚 或 📝。
 | lark-cli | `npm install -g @larksuite/cli` | 写飞书 + 发消息 |
 | `DASHSCOPE_API_KEY` | 阿里云百炼控制台 | qwen3-asr-flash 鉴权 |
 
-## 跨 Session 持久化（已配置）
+## 跨 Session 持久化（已配置，全局生效）
 
-本仓库的 `.claude/hooks/lark-cli-restore.sh` + `.claude/hooks/lark-cli-backup.sh` 会在 SessionStart / Stop 自动备份和还原 lark-cli 的 `~/.lark-cli/` 和 `~/.local/share/lark-cli/`（含 AES master.key 和 OAuth token）到 `.lark-cli-backup/`。备份目录已 gitignore，**绝不能提交**。
+lark-cli 的 OAuth 登录态在用户级 `~/.claude/` 持久化，跨 session、跨仓库、跨分支都能用，**首次配过之后永不再 OAuth**。
 
-只要这两个 hook 在，远程 sandbox 重置后下次新 session 启动会自动登录态恢复，不用再走 OAuth。
+涉及文件（全部在 `~/.claude/`，不在任何 git 仓库里）：
+
+| 文件 | 角色 |
+|---|---|
+| `~/.claude/lark-cli-restore.sh` | SessionStart hook：把备份还原到 `~/.lark-cli/` 和 `~/.local/share/lark-cli/` |
+| `~/.claude/lark-cli-backup.sh` | Stop hook：把当前登录态（含刷新过的 token）写回备份 |
+| `~/.claude/.lark-cli-backup/` | 备份数据，含 AES master.key 和加密 OAuth token，**root only** |
+| `~/.claude/settings.json` | 注册上面两个 hook |
+
+两个 hook 都用 `CLAUDE_CODE_REMOTE` 守门，本地开发不会跑。如果 token refresh window 过期了（默认 7 天没用），下次 session 启动 restore 出来的也是死 token，手动 `lark-cli auth login --recommend` 一次即可，新 token 会被下次 Stop 自动备份回来。
+
+**首次配置（仅在最早的 session 做一次）：**
+```bash
+npm install -g @larksuite/cli
+lark-cli config init --new       # 输出 URL，浏览器完成应用授权
+lark-cli auth login --recommend  # 输出 URL，浏览器完成用户登录
+```
+之后所有 session 都不需要再做这两步。

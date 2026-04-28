@@ -1,3 +1,8 @@
-# lark-cli auth state — restored at SessionStart, snapshotted at Stop.
-# Contains AES master key and OAuth tokens; MUST never be committed.
+# Defensive guard: lark-cli auth backups now live at ~/.claude/.lark-cli-backup/
+# (user-level, global). They should never appear in the repo, but keep this in
+# case anyone moves the backup back into the repo by accident.
 .lark-cli-backup/
+
+# Python bytecode
+__pycache__/
+*.pyc

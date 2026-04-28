@@ -1,0 +1,106 @@
+{
+  "title": "Mandy and Sandy - Twin Sisters",
+  "characters": [
+    {
+      "name": "Mandy",
+      "description": "12-year-old girl inspired by Elsa from Frozen as a child: long flowing blonde hair down to her waist, bright sky-blue eyes, fair rosy cheeks, sweet warm smile, wearing a light pink floral knee-length dress with white collar and short puffy sleeves, energetic cheerful expression",
+      "ref_prompt": "Character turnaround sheet, 12-year-old girl inspired by young Elsa from Frozen, long flowing blonde hair to waist, bright sky-blue eyes, fair rosy cheeks, sweet warm smile, light pink floral knee-length dress with white collar and short puffy sleeves, full body front / 3/4 / side view, white background, semi-realistic comic art style, Disney Pixar character design"
+    },
+    {
+      "name": "Sandy",
+      "description": "12-year-old girl identical twin to Mandy inspired by Elsa from Frozen as a child: long flowing blonde hair down to her waist, bright sky-blue eyes, fair rosy cheeks, sweet warm smile, wearing the SAME light pink floral knee-length dress with white collar and short puffy sleeves, identical to her sister",
+      "ref_prompt": "Character turnaround sheet, 12-year-old girl inspired by young Elsa from Frozen, long flowing blonde hair to waist, bright sky-blue eyes, fair rosy cheeks, sweet warm smile, light pink floral knee-length dress identical to her twin, full body front / 3/4 / side view, white background, semi-realistic comic art style, Disney Pixar character design"
+    },
+    {
+      "name": "MrBrown",
+      "description": "40-year-old male PE teacher inspired by Coach Bombay style: tall athletic build, short brown hair, kind brown eyes, light stubble, wearing a navy blue tracksuit with white stripes and a silver whistle around his neck, friendly approachable expression",
+      "ref_prompt": "Character turnaround sheet, 40-year-old male PE teacher, tall athletic build, short brown hair, kind brown eyes, light stubble, navy blue tracksuit with white stripes, silver whistle on lanyard, full body front / 3/4 / side view, white background, semi-realistic comic art style, Disney Pixar character design"
+    }
+  ],
+  "locations": [
+    {
+      "name": "sports_field",
+      "description": "Sunny school sports field with green grass, red running track, white goal posts, bright blue sky",
+      "ref_prompt": "Establishing shot, sunny school sports field, lush green grass, red running track with lane lines, white soccer goal posts, bright blue sky with fluffy clouds, school building in distance, no characters, semi-realistic comic art style, vibrant colors"
+    },
+    {
+      "name": "school_exterior",
+      "description": "Cheerful middle school exterior with red brick walls, large windows, students walking",
+      "ref_prompt": "Establishing wide shot, cheerful middle school building exterior, red brick walls, tall white-framed windows, blue entrance archway, sunny morning light, semi-realistic comic art style, Disney Pixar background art, no main characters in foreground"
+    }
+  ],
+  "scenes": [
+    {
+      "text": "Mandy and Sandy are twin sisters.",
+      "prompt": "Wide shot, two identical 12-year-old twin girls inspired by young Elsa from Frozen with long flowing blonde hair to waist and bright sky-blue eyes and rosy cheeks, both wearing matching light pink floral knee-length dresses with white collars, arms warmly around each other shoulder to shoulder, beaming sweet smiles directly at camera, sunny outdoor schoolyard background, golden hour lighting, vibrant warm colors, semi-realistic comic art style, Disney Pixar visual storytelling",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "They both have long blonde hair and are of the same height.",
+      "prompt": "Medium shot side-by-side comparison, two identical 12-year-old twin girls inspired by young Elsa from Frozen, long flowing blonde hair cascading to waist, bright sky-blue eyes, rosy cheeks, exactly the same height standing shoulder to shoulder, both wearing matching light pink floral dresses, soft side lighting highlighting their identical hair, looking at each other and giggling, schoolyard background slightly blurred, semi-realistic comic art style",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "They usually wear the same dresses.",
+      "prompt": "Medium full shot, twin sisters Mandy and Sandy spinning together holding hands, identical light pink floral knee-length dresses with white collars and puffy sleeves twirling outward, long blonde hair flying, bright sky-blue eyes sparkling with joy, sunny outdoor courtyard with blossoming pink trees, dynamic motion, soft warm lighting, semi-realistic comic art style, Disney Pixar energy",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "They look the same and study in the same middle school.",
+      "prompt": "Wide establishing shot, twin sisters Mandy and Sandy walking together side by side toward a cheerful middle school building with red brick walls and tall windows and blue entrance archway, both carrying matching school backpacks, identical long blonde hair and light pink floral dresses, morning sunlight, other students in background, semi-realistic comic art style",
+      "char_ref": "Mandy",
+      "loc_ref": "school_exterior"
+    },
+    {
+      "text": "Although they aren't in the same class, they have the same PE teacher, Mr Brown.",
+      "prompt": "Medium shot, Mr Brown the 40-year-old PE teacher with tall athletic build short brown hair kind brown eyes light stubble wearing navy blue tracksuit with white stripes and silver whistle on lanyard, standing confidently on red running track with arms crossed and warm smile, looking at camera, two distant tiny figures of identical twin girls in pink dresses visible in the background, sunny school sports field, semi-realistic comic art style",
+      "char_ref": "MrBrown",
+      "loc_ref": "sports_field"
+    },
+    {
+      "text": "It is the first PE class.",
+      "prompt": "Wide shot, sunny school sports field with green grass and red running track, group of middle school students in PE uniforms gathering and chatting excitedly, Mandy in her light pink floral dress visible in the foreground putting her blonde hair into a ponytail, bright morning light casting long shadows, energetic first-day atmosphere, semi-realistic comic art style, Disney Pixar background",
+      "char_ref": "Mandy",
+      "loc_ref": "sports_field"
+    },
+    {
+      "text": "Mandy and her classmates go to have the PE class.",
+      "prompt": "Dynamic medium shot from low angle, Mandy with long blonde hair in a ponytail and light pink floral dress jogging cheerfully alongside three classmates toward the camera on red running track, all smiling and chatting, motion blur on background, sunlit sports field, white goal posts visible, energetic dynamic composition, semi-realistic comic art style",
+      "char_ref": "Mandy",
+      "loc_ref": "sports_field"
+    },
+    {
+      "text": "The class begins.",
+      "prompt": "Wide shot, Mr Brown in navy blue tracksuit standing in front facing the camera blowing his silver whistle with cheeks puffed and one hand raised, twelve middle school students including Mandy in her pink dress lined up in two rows on green sports field grass at attention, red running track behind, bright midday sunlight, dramatic energetic moment, semi-realistic comic art style",
+      "char_ref": "MrBrown",
+      "loc_ref": "sports_field"
+    },
+    {
+      "text": "But when Mr Brown sees her, he is very surprised.",
+      "prompt": "Close-up dramatic shot, Mr Brown's face with eyes wide open in exaggerated surprise mouth slightly agape, eyebrows raised high, navy blue tracksuit collar visible, soft focus background of green sports field, dramatic side lighting highlighting his shocked expression, semi-realistic comic art style, Disney Pixar exaggerated emotion",
+      "char_ref": "MrBrown",
+      "loc_ref": "sports_field"
+    },
+    {
+      "text": "He says to her, You had my class just now. Why do you come to my class again?",
+      "prompt": "Medium two-shot, Mr Brown in navy blue tracksuit gesturing with both hands open in a confused questioning gesture and speaking with concerned puzzled expression, Mandy facing him with long blonde hair in ponytail and light pink floral dress looking puzzled and slightly tilting her head, on red running track, soft afternoon lighting, comic-book speech-bubble feel, semi-realistic comic art style",
+      "char_ref": "MrBrown",
+      "loc_ref": "sports_field"
+    },
+    {
+      "text": "Mandy is also very surprised to hear this, but she understands soon.",
+      "prompt": "Close-up shot, Mandy's face transitioning from wide-eyed startled surprise to a slow dawning realization, long blonde hair in ponytail catching sunlight, bright sky-blue eyes lighting up, small knowing smile beginning to form at corner of her mouth, finger near her chin in thinking gesture, soft warm afternoon lighting, semi-realistic comic art style, expressive Disney Pixar emotion",
+      "char_ref": "Mandy",
+      "loc_ref": null
+    },
+    {
+      "text": "She smiles and says, Mr Brown, you may have made a mistake. I have a twin sister.",
+      "prompt": "Medium shot, Mandy smiling brightly and warmly with one hand gently raised palm up explaining, long blonde hair in ponytail, light pink floral dress, bright sky-blue eyes sparkling, Mr Brown in navy tracksuit on the right listening with a relieved understanding smile beginning to form and one hand on his forehead in self-realization, sunny sports field background, warm heartfelt resolution lighting, semi-realistic comic art style, Disney Pixar heartwarming finale",
+      "char_ref": "Mandy",
+      "loc_ref": "sports_field"
+    }
+  ]
+}

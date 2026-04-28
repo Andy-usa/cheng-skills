@@ -104,10 +104,16 @@ def burn_subtitle(img_path, text, out_path):
     img = Image.open(img_path).convert("RGB").resize(
         (CANVAS_W, CANVAS_H), Image.LANCZOS)
     font = None
-    for fp in ["/System/Library/Fonts/Helvetica.ttc",
-               "/System/Library/Fonts/Arial.ttf",
-               "/Library/Fonts/Arial.ttf",
-               "/System/Library/Fonts/Supplemental/Arial.ttf"]:
+    for fp in [
+            # Linux (cloud sandbox) — installed by SessionStart hook.
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+            # macOS (local dev).
+            "/System/Library/Fonts/Helvetica.ttc",
+            "/System/Library/Fonts/Arial.ttf",
+            "/Library/Fonts/Arial.ttf",
+            "/System/Library/Fonts/Supplemental/Arial.ttf"]:
         if os.path.exists(fp):
             try: font = ImageFont.truetype(fp, 40); break
             except: pass
@@ -251,7 +257,9 @@ def phase_video(plan, audio_dir, img_dir, sub_dir, clips_dir, final_dir):
     ok = concat_clips(clip_paths, final)
     if ok:
         print(f"\n✅  {final}")
-        subprocess.run(["open", final])
+        # macOS-only auto-open; harmless no-op on Linux/cloud sandboxes.
+        if sys.platform == "darwin":
+            subprocess.run(["open", final])
     else:
         print("❌ Concat failed")
 

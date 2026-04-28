@@ -1,5 +1,9 @@
 #!/bin/bash
-# SessionStart hook: restore lark-cli auth state from the repo-local backup.
+# SessionStart hook: bootstrap remote sandbox for skills in this repo.
+#  - install lark-cli + jimeng-cli (npm, wiped each session)
+#  - install ffmpeg + fonts (apt, wiped each session)
+#  - install python deps (edge-tts, pillow)
+#  - restore lark-cli + jimeng-cli auth state from repo-local backups
 # Runs only in remote (Claude Code on the web) sessions where $HOME is ephemeral.
 set -euo pipefail
 
@@ -8,29 +12,50 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   exit 0
 fi
 
-# Remote sandbox wipes npm global installs every session. Reinstall lark-cli
-# silently so the user never has to do `npm install -g @larksuite/cli` again.
+# ── npm CLIs ─────────────────────────────────────────────────────────────────
 if ! command -v lark-cli >/dev/null 2>&1; then
   npm install -g @larksuite/cli >/dev/null 2>&1 || true
 fi
+if ! command -v jimeng >/dev/null 2>&1; then
+  npm install -g jimeng-cli >/dev/null 2>&1 || true
+fi
+
+# Expose the dreamina shim (translates dreamina CLI calls to jimeng-cli) so
+# the english-picture-to-video skill can call `dreamina` from anywhere.
+DREAMINA_SHIM="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}/english-picture-to-video/bin/dreamina"
+if [ -x "$DREAMINA_SHIM" ] && ! command -v dreamina >/dev/null 2>&1; then
+  ln -sf "$DREAMINA_SHIM" /usr/local/bin/dreamina 2>/dev/null || true
+fi
+
+# ── ffmpeg + fonts (for english-picture-to-video) ────────────────────────────
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  apt-get update >/dev/null 2>&1 || true
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    ffmpeg fonts-dejavu-core fonts-noto-cjk >/dev/null 2>&1 || true
+fi
+
+# ── python deps (for english-picture-to-video) ───────────────────────────────
+python3 -c "import edge_tts, PIL" 2>/dev/null || \
+  pip3 install --quiet --no-input edge-tts pillow >/dev/null 2>&1 || true
 
 REPO="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
-BACKUP="$REPO/.lark-cli-backup"
 
-# Nothing to restore yet — first session.
-if [ ! -d "$BACKUP" ]; then
-  exit 0
-fi
-
-# Restore CLI config (appId, brand, current users).
-if [ -d "$BACKUP/.lark-cli" ]; then
+# ── restore lark-cli auth ────────────────────────────────────────────────────
+LARK_BACKUP="$REPO/.lark-cli-backup"
+if [ -d "$LARK_BACKUP/.lark-cli" ]; then
   mkdir -p "$HOME/.lark-cli"
-  cp -a "$BACKUP/.lark-cli/." "$HOME/.lark-cli/"
+  cp -a "$LARK_BACKUP/.lark-cli/." "$HOME/.lark-cli/"
+fi
+if [ -d "$LARK_BACKUP/lark-cli-share" ]; then
+  mkdir -p "$HOME/.local/share/lark-cli"
+  cp -a "$LARK_BACKUP/lark-cli-share/." "$HOME/.local/share/lark-cli/"
+  chmod 600 "$HOME/.local/share/lark-cli/"*.enc "$HOME/.local/share/lark-cli/master.key" 2>/dev/null || true
 fi
 
-# Restore the encrypted secret store (master.key + appsecret/user .enc files).
-if [ -d "$BACKUP/lark-cli-share" ]; then
-  mkdir -p "$HOME/.local/share/lark-cli"
-  cp -a "$BACKUP/lark-cli-share/." "$HOME/.local/share/lark-cli/"
-  chmod 600 "$HOME/.local/share/lark-cli/"*.enc "$HOME/.local/share/lark-cli/master.key" 2>/dev/null || true
+# ── restore jimeng-cli token pool ────────────────────────────────────────────
+JIMENG_BACKUP="$REPO/.jimeng-backup"
+if [ -f "$JIMENG_BACKUP/token-pool.json" ]; then
+  mkdir -p "$HOME/.jimeng"
+  cp -a "$JIMENG_BACKUP/token-pool.json" "$HOME/.jimeng/token-pool.json"
+  chmod 600 "$HOME/.jimeng/token-pool.json" 2>/dev/null || true
 fi

@@ -1,3 +1,7 @@
 # lark-cli auth state — restored at SessionStart, snapshotted at Stop.
 # Contains AES master key and OAuth tokens; MUST never be committed.
 .lark-cli-backup/
+
+# jimeng-cli (即梦) session token — restored at SessionStart, snapshotted at Stop.
+# Holds the user's logged-in Jimeng sessionid; MUST never be committed.
+.jimeng-backup/

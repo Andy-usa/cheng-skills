@@ -1,0 +1,3 @@
+# lark-cli auth state — restored at SessionStart, snapshotted at Stop.
+# Contains AES master key and OAuth tokens; MUST never be committed.
+.lark-cli-backup/

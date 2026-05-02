@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Skills Hub — 最热门 Claude Code Skill 精选</title>
+  <meta name="description" content="发现并安装最热门的 Claude Code Skills，帮助初学者快速掌握 Claude Code 的核心能力。24 个精选技能，覆盖开发、设计、文档、安全等全场景。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f6fa;
+      --surface: #ffffff;
+      --surface2: #f0f1f6;
+      --border: #e4e6ef;
+      --border2: #d0d3e8;
+      --text: #1a1d2e;
+      --text2: #525879;
+      --text3: #8b90ab;
+      --accent: #d97706;
+      --accent2: #f59e0b;
+      --accent-bg: #fff7ed;
+      --accent-border: #fed7aa;
+      --brand: #cc5500;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow: 0 2px 12px rgba(26,29,46,.07);
+      --shadow-lg: 0 8px 32px rgba(26,29,46,.12);
+      --nav-h: 64px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      height: var(--nav-h);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 clamp(16px, 4vw, 48px);
+      gap: 32px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 17px; color: var(--text);
+      text-decoration: none; flex-shrink: 0;
+    }
+    .nav-logo span.icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: #fff; flex-shrink: 0;
+    }
+    .nav-logo span.name { color: var(--text); }
+    .nav-logo span.dot { color: var(--accent); }
+    .nav-links {
+      display: flex; align-items: center; gap: 4px;
+      flex: 1; list-style: none;
+    }
+    .nav-links a {
+      padding: 6px 12px; border-radius: 8px;
+      text-decoration: none; font-size: 14px; font-weight: 500;
+      color: var(--text2);
+      transition: background .15s, color .15s;
+    }
+    .nav-links a:hover { background: var(--surface2); color: var(--text); }
+    .nav-links a.active { background: var(--accent-bg); color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .nav-search {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 22px; padding: 7px 14px; width: 220px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .nav-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(217,119,6,.1); }
+    .nav-search input {
+      background: none; border: none; outline: none;
+      font-size: 13.5px; color: var(--text); width: 100%;
+    }
+    .nav-search input::placeholder { color: var(--text3); }
+    .nav-search svg { color: var(--text3); flex-shrink: 0; }
+    .btn-primary {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #fff; border: none; cursor: pointer;
+      padding: 8px 18px; border-radius: 22px;
+      font-size: 13.5px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none;
+      transition: opacity .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+
+    /* ─── HERO ─── */
+    .hero {
+      background: linear-gradient(160deg, #1a1d2e 0%, #2d2f4e 50%, #1e2040 100%);
+      padding: 80px clamp(16px, 4vw, 48px) 72px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(217,119,6,.18) 0%, transparent 70%);
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(217,119,6,.15); border: 1px solid rgba(217,119,6,.3);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 12.5px; font-weight: 600; color: #f59e0b;
+      letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-badge svg { width: 14px; height: 14px; }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900; line-height: 1.15;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: normal; color: #f59e0b; }
+    .hero p {
+      font-size: clamp(15px, 2vw, 17px);
+      color: rgba(255,255,255,.65);
+      max-width: 580px; margin: 0 auto 36px;
+      line-height: 1.75;
+    }
+    .hero-search-wrap {
+      display: flex; gap: 10px; justify-content: center;
+      max-width: 560px; margin: 0 auto 44px;
+    }
+    .hero-search {
+      flex: 1; display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.18);
+      border-radius: 28px; padding: 12px 20px;
+      backdrop-filter: blur(8px);
+      transition: border-color .2s, background .2s;
+    }
+    .hero-search:focus-within {
+      border-color: rgba(245,158,11,.6);
+      background: rgba(255,255,255,.13);
+    }
+    .hero-search input {
+      flex: 1; background: none; border: none; outline: none;
+      font-size: 15px; color: #fff;
+    }
+    .hero-search input::placeholder { color: rgba(255,255,255,.45); }
+    .hero-search svg { color: rgba(255,255,255,.5); flex-shrink: 0; }
+    .hero-search-btn {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #fff; border: none; cursor: pointer;
+      padding: 12px 24px; border-radius: 24px;
+      font-size: 14px; font-weight: 700;
+      white-space: nowrap;
+      transition: opacity .2s, transform .15s;
+    }
+    .hero-search-btn:hover { opacity: .9; transform: translateY(-1px); }
+    .hero-stats {
+      display: flex; justify-content: center; gap: clamp(20px, 5vw, 56px);
+      flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat strong {
+      display: block; font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 800; color: #fff; line-height: 1.1;
+    }
+    .hero-stat span { font-size: 13px; color: rgba(255,255,255,.5); margin-top: 4px; }
+
+    /* ─── MAIN LAYOUT ─── */
+    .main-wrap {
+      max-width: 1280px; margin: 0 auto;
+      padding: 40px clamp(16px, 3vw, 40px);
+    }
+    .layout { display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: start; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar { position: sticky; top: calc(var(--nav-h) + 20px); }
+    .sidebar-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+      margin-bottom: 16px;
+    }
+    .sidebar-box h3 {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text3); margin-bottom: 12px;
+    }
+    .cat-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px; border-radius: 8px; cursor: pointer;
+      font-size: 13.5px; font-weight: 500; color: var(--text2);
+      transition: background .15s, color .15s;
+      user-select: none;
+    }
+    .cat-item:hover { background: var(--surface2); color: var(--text); }
+    .cat-item.active { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
+    .cat-item .cat-left { display: flex; align-items: center; gap: 8px; }
+    .cat-item .cat-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .cat-count {
+      background: var(--surface2); color: var(--text3);
+      font-size: 11.5px; font-weight: 600; padding: 1px 7px;
+      border-radius: 10px;
+    }
+    .cat-item.active .cat-count { background: var(--accent-border); color: var(--accent); }
+    .type-filter { display: flex; flex-direction: column; gap: 6px; }
+    .type-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 10px; border-radius: 8px; cursor: pointer;
+      font-size: 13px; font-weight: 500; color: var(--text2);
+      transition: background .15s, color .15s; user-select: none;
+    }
+    .type-chip:hover { background: var(--surface2); }
+    .type-chip.active { background: var(--accent-bg); color: var(--accent); }
+    .type-chip .dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* ─── GRID AREA ─── */
+    .grid-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .grid-header-left h2 {
+      font-size: 18px; font-weight: 700; color: var(--text);
+    }
+    .grid-header-left p { font-size: 13px; color: var(--text3); margin-top: 2px; }
+    .sort-select {
+      appearance: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 32px 7px 12px;
+      font-size: 13px; font-weight: 500; color: var(--text2);
+      cursor: pointer; outline: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238b90ab' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 18px;
+    }
+
+    /* ─── SKILL CARD ─── */
+    .skill-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px;
+      display: flex; flex-direction: column; gap: 14px;
+      transition: box-shadow .2s, border-color .2s, transform .2s;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .skill-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--card-color, #d97706), var(--card-color2, #f59e0b));
+      opacity: 0; transition: opacity .2s;
+    }
+    .skill-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+    .skill-card:hover::before { opacity: 1; }
+    .card-head { display: flex; align-items: flex-start; gap: 14px; }
+    .card-icon {
+      width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; background: var(--icon-bg, #fff7ed);
+    }
+    .card-meta { flex: 1; min-width: 0; }
+    .card-name {
+      font-size: 15.5px; font-weight: 700; color: var(--text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 3px;
+    }
+    .card-name code {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      background: var(--accent-bg); padding: 1px 6px; border-radius: 5px;
+    }
+    .card-author {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--text3);
+    }
+    .author-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 1px 6px; border-radius: 4px; font-size: 10.5px; font-weight: 600;
+    }
+    .badge-official {
+      background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;
+    }
+    .badge-bundled {
+      background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;
+    }
+    .badge-community {
+      background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe;
+    }
+    .card-desc {
+      font-size: 13.5px; color: var(--text2); line-height: 1.65;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 6px;
+      background: var(--surface2); color: var(--text3);
+    }
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 12px; border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+    .card-installs {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12.5px; color: var(--text3);
+    }
+    .card-installs strong { color: var(--text2); font-weight: 600; }
+    .card-actions { display: flex; gap: 8px; }
+    .btn-copy {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 12px;
+      font-size: 12px; font-weight: 600; color: var(--text2);
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .btn-copy:hover { background: var(--accent-bg); color: var(--accent); border-color: var(--accent-border); }
+    .btn-copy.copied { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+    .btn-detail {
+      display: flex; align-items: center; gap: 5px;
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      border: none; border-radius: 8px; padding: 6px 12px;
+      font-size: 12px; font-weight: 600; color: #fff;
+      cursor: pointer; transition: opacity .15s;
+    }
+    .btn-detail:hover { opacity: .88; }
+    .install-difficulty {
+      display: flex; align-items: center; gap: 3px;
+    }
+    .diff-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      backdrop-filter: blur(4px); z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; visibility: hidden;
+      transition: opacity .2s, visibility .2s;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal {
+      background: var(--surface); border-radius: 18px;
+      width: 100%; max-width: 600px;
+      max-height: 85vh; overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,.25);
+      transform: scale(.95) translateY(10px);
+      transition: transform .2s;
+    }
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+    .modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-icon-wrap { display: flex; align-items: center; gap: 14px; }
+    .modal-icon {
+      width: 54px; height: 54px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+    }
+    .modal-title { }
+    .modal-title h2 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+    .modal-title .cmd {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 14px; color: var(--accent);
+      background: var(--accent-bg); padding: 2px 8px; border-radius: 6px;
+    }
+    .modal-close {
+      background: var(--surface2); border: none; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text3); font-size: 16px; transition: background .15s;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { background: var(--border); }
+    .modal-body { padding: 24px 28px; }
+    .modal-section { margin-bottom: 22px; }
+    .modal-section h4 {
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--text3); margin-bottom: 10px;
+    }
+    .modal-section p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+    .install-box {
+      background: var(--text); border-radius: 10px; padding: 14px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .install-box code {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px; color: #f59e0b;
+      word-break: break-all; flex: 1;
+    }
+    .copy-btn-sm {
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 7px; padding: 5px 10px;
+      font-size: 12px; font-weight: 600; color: #fff;
+      cursor: pointer; white-space: nowrap; transition: background .15s;
+      flex-shrink: 0;
+    }
+    .copy-btn-sm:hover { background: rgba(255,255,255,.2); }
+    .features-list { display: flex; flex-direction: column; gap: 8px; }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13.5px; color: var(--text2);
+    }
+    .feature-item::before {
+      content: '✓'; color: var(--accent); font-weight: 700;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .modal-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .modal-stat-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .modal-stat {
+      background: var(--surface2); border-radius: 10px; padding: 14px;
+    }
+    .modal-stat .label { font-size: 11.5px; color: var(--text3); font-weight: 600; margin-bottom: 4px; }
+    .modal-stat .value { font-size: 17px; font-weight: 800; color: var(--text); }
+    .modal-footer {
+      padding: 0 28px 28px;
+      display: flex; gap: 10px;
+    }
+    .modal-footer .btn-primary { padding: 11px 22px; border-radius: 10px; }
+    .modal-footer .btn-sec {
+      flex: 1; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 11px 22px;
+      font-size: 14px; font-weight: 600; color: var(--text2);
+      cursor: pointer; text-decoration: none; display: flex;
+      align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .modal-footer .btn-sec:hover { background: var(--border); }
+
+    /* ─── NOTICE BANNER ─── */
+    .notice {
+      background: linear-gradient(135deg, #fff7ed, #fffbeb);
+      border: 1px solid #fed7aa; border-radius: var(--radius);
+      padding: 16px 20px; margin-bottom: 24px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .notice-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .notice p { font-size: 13.5px; color: #92400e; line-height: 1.6; }
+    .notice p strong { color: #78350f; }
+    .notice p a { color: var(--accent); font-weight: 600; }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      text-align: center; padding: 64px 20px;
+      grid-column: 1 / -1;
+    }
+    .empty-state .emoji { font-size: 48px; margin-bottom: 14px; }
+    .empty-state h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .empty-state p { font-size: 14px; color: var(--text3); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--text); margin-top: 60px;
+      padding: 48px clamp(16px, 4vw, 64px) 32px;
+    }
+    .footer-grid {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-brand .logo-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .footer-brand .logo-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; color: #fff;
+    }
+    .footer-brand .logo-text { font-size: 16px; font-weight: 800; color: #fff; }
+    .footer-brand p { font-size: 13.5px; color: rgba(255,255,255,.45); line-height: 1.7; max-width: 300px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(255,255,255,.35); margin-bottom: 14px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul li a {
+      font-size: 13.5px; color: rgba(255,255,255,.55);
+      text-decoration: none; transition: color .15s;
+    }
+    .footer-col ul li a:hover { color: #f59e0b; }
+    .footer-bottom {
+      max-width: 1280px; margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 13px; color: rgba(255,255,255,.3); }
+    .footer-badges { display: flex; gap: 10px; }
+    .footer-badge {
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.35);
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      padding: 4px 10px; border-radius: 6px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { gap: 24px; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 48px 16px 52px; }
+      .hero-search-wrap { flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .modal-stat-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── UTILITY ─── */
+    .text-muted { color: var(--text3); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* ─── ANIMATION ─── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .skill-card { animation: fadeInUp .3s ease both; }
+    .skill-card:nth-child(1) { animation-delay: .04s; }
+    .skill-card:nth-child(2) { animation-delay: .08s; }
+    .skill-card:nth-child(3) { animation-delay: .12s; }
+    .skill-card:nth-child(4) { animation-delay: .16s; }
+    .skill-card:nth-child(5) { animation-delay: .20s; }
+    .skill-card:nth-child(6) { animation-delay: .24s; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="icon">⚡</span>
+    <span class="name">Claude Skills<span class="dot"> Hub</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#skills" class="active">浏览技能</a></li>
+    <li><a href="#guide">入门教程</a></li>
+    <li><a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">官方文档</a></li>
+    <li><a href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank" rel="noopener">Awesome List</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-search">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="nav-search-input" type="text" placeholder="搜索 Skill…" autocomplete="off">
+    </div>
+    <a href="https://code.claude.com/docs/en/skills" target="_blank" class="btn-primary">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      创建 Skill
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Claude Code · Skills 精选目录
+    </div>
+    <h1>发现最热门的<br><em>Claude Code Skills</em></h1>
+    <p>精选 24 个最受欢迎的官方与社区 Skill，覆盖设计、开发、文档、安全等全场景。<br>帮助 Claude Code 初学者快速上手，让 AI 真正为你所用。</p>
+
+    <div class="hero-search-wrap">
+      <div class="hero-search">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input id="hero-search-input" type="text" placeholder="搜索 Skill 名称或功能，如 &quot;前端设计&quot;、&quot;代码审查&quot;…" autocomplete="off">
+      </div>
+      <button class="hero-search-btn" onclick="document.getElementById('skills').scrollIntoView({behavior:'smooth'})">
+        搜索 →
+      </button>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>24</strong>
+        <span>精选 Skills</span>
+      </div>
+      <div class="hero-stat">
+        <strong>8</strong>
+        <span>技能分类</span>
+      </div>
+      <div class="hero-stat">
+        <strong>277K+</strong>
+        <span>最高装机量</span>
+      </div>
+      <div class="hero-stat">
+        <strong>3</strong>
+        <span>技能来源</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="main-wrap" id="skills">
+
+  <!-- NOTICE -->
+  <div class="notice">
+    <div class="notice-icon">💡</div>
+    <p>
+      <strong>什么是 Claude Code Skill？</strong>
+      Skill 是一个包含 <code>SKILL.md</code> 的目录，你可以通过 <code>/技能名</code> 触发它，也可以让 Claude 在合适时机自动调用。
+      内置 Skill 随 Claude Code 安装自带，无需额外操作；社区 Skill 通过 <code>npx skills add &lt;来源&gt;</code> 安装。
+      <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">→ 查看官方文档</a>
+    </p>
+  </div>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-box">
+        <h3>技能分类</h3>
+        <div id="cat-list">
+          <div class="cat-item active" data-cat="all">
+            <span class="cat-left">
+              <span class="cat-icon" style="background:#f0f1f6">🔥</span>全部技能
+            </span>
+            <span class="cat-count" id="cnt-all">24</span>
+          </div>
+          <div class="cat-item" data-cat="bundled">
+            <span class="cat-left">
+              <span class="cat-icon" style="background:#eff6ff">📦</span>内置技能
+            </span>
+            <span class="cat-count" id="cnt-bundled">8</span>
+          </div>
+          <div class="cat-item" data-cat="design">
+            <span class="cat-left">
+              <span class="cat-icon" style="background:#fdf4ff">🎨</span>设计与 UI
+            </span>
+            <span class="cat-count" id="cnt-design">4</span>
+          </div>
+          <div class="cat-item" data-cat="dev">
+            <span class="cat-left">
+              <span class="cat-icon" style="background:#ecfdf5">⚙️</span>开发工具
+            </span>
+            <span class="cat-count" id="cnt-dev">5</span>
+          </div>
+          <div class="cat-item" data-cat="docs">
+            <span class="cat-left">
+              <span class="cat-icon" style="background:#fff7ed">📄</span>文档处理
+            </span>
+            <span class="cat-count" id="cnt-docs">4</span>
+          </div>
+          <div class="cat-item" data-cat="security">
+            <span class="cat-left">
+              <span class="cat-icon" style="background:#fef2f2">🔒</span>安全审计
+            </span>
+            <span class="cat-count" id="cnt-security">2</span>
+          </div>
+          <div class="cat-item" data-cat="automation">
+            <span class="cat-left">
+              <span class="cat-icon" style="background:#f0fdf4">🤖</span>自动化
+            </span>
+            <span class="cat-count" id="cnt-automation">1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-box">
+        <h3>来源筛选</h3>
+        <div class="type-filter">
+          <div class="type-chip active" data-type="all">
+            <span class="dot" style="background:#d97706"></span>全部来源
+          </div>
+          <div class="type-chip" data-type="bundled">
+            <span class="dot" style="background:#2563eb"></span>内置 (Bundled)
+          </div>
+          <div class="type-chip" data-type="official">
+            <span class="dot" style="background:#059669"></span>Anthropic 官方
+          </div>
+          <div class="type-chip" data-type="community">
+            <span class="dot" style="background:#7c3aed"></span>社区 (Community)
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-box">
+        <h3>快速入门</h3>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:12.5px;color:var(--text3);line-height:1.65">
+            <strong style="color:var(--text2)">①</strong> 安装 Claude Code<br>
+            <strong style="color:var(--text2)">②</strong> 在项目中输入 <code style="font-size:11.5px;background:var(--surface2);padding:1px 5px;border-radius:4px">/skill-name</code><br>
+            <strong style="color:var(--text2)">③</strong> 内置 Skill 直接可用<br>
+            <strong style="color:var(--text2)">④</strong> 社区 Skill 先执行安装命令
+          </div>
+          <a href="https://code.claude.com/docs/en/skills" target="_blank" class="btn-primary" style="justify-content:center;border-radius:9px;margin-top:4px">
+            查看完整教程 →
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- GRID -->
+    <main>
+      <div class="grid-header">
+        <div class="grid-header-left">
+          <h2 id="grid-title">全部 Skills <span style="color:var(--text3);font-weight:400;font-size:14px" id="grid-count">共 24 个</span></h2>
+          <p id="grid-subtitle">官方内置 + Anthropic 官方 + 精选社区 Skill</p>
+        </div>
+        <select class="sort-select" id="sort-select">
+          <option value="popular">按热度排序</option>
+          <option value="name">按名称排序</option>
+          <option value="type">按来源排序</option>
+        </select>
+      </div>
+
+      <div class="skills-grid" id="skills-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-icon-wrap">
+        <div class="modal-icon" id="modal-icon"></div>
+        <div class="modal-title">
+          <h2 id="modal-name"></h2>
+          <span class="cmd" id="modal-cmd"></span>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <h4>📖 技能介绍</h4>
+        <p id="modal-desc"></p>
+      </div>
+      <div class="modal-section" id="modal-features-section">
+        <h4>✨ 核心功能</h4>
+        <div class="features-list" id="modal-features"></div>
+      </div>
+      <div class="modal-section">
+        <h4>🚀 安装 / 使用方式</h4>
+        <div class="install-box">
+          <code id="modal-install"></code>
+          <button class="copy-btn-sm" onclick="copyModalInstall()">复制</button>
+        </div>
+      </div>
+      <div class="modal-stat-row modal-section">
+        <div class="modal-stat">
+          <div class="label">装机量</div>
+          <div class="value" id="modal-installs"></div>
+        </div>
+        <div class="modal-stat">
+          <div class="label">来源</div>
+          <div class="value" id="modal-source"></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <h4>🏷 标签</h4>
+        <div class="modal-tags" id="modal-tags"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" onclick="copyModalInstall()" style="flex:1">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        复制安装命令
+      </button>
+      <a class="btn-sec" id="modal-docs-link" href="#" target="_blank" rel="noopener">查看文档 →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer id="guide">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-row">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Claude Skills Hub</span>
+      </div>
+      <p>专注 Claude Code Skill 的中文精选目录。帮助开发者发现、了解并快速上手最热门的 Claude Code Skills，让 AI 辅助编程效率翻倍。</p>
+    </div>
+    <div class="footer-col">
+      <h4>技能分类</h4>
+      <ul>
+        <li><a href="#">内置技能 (Bundled)</a></li>
+        <li><a href="#">设计与 UI</a></li>
+        <li><a href="#">开发工具</a></li>
+        <li><a href="#">文档处理</a></li>
+        <li><a href="#">安全审计</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>资源链接</h4>
+      <ul>
+        <li><a href="https://code.claude.com/docs/en/skills" target="_blank">Skills 官方文档</a></li>
+        <li><a href="https://code.claude.com/docs/en/commands" target="_blank">内置命令参考</a></li>
+        <li><a href="https://github.com/anthropics/skills" target="_blank">Anthropic Skills Repo</a></li>
+        <li><a href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank">Awesome Claude Code</a></li>
+        <li><a href="https://github.com/travisvn/awesome-claude-skills" target="_blank">Awesome Claude Skills</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>入门指南</h4>
+      <ul>
+        <li><a href="https://code.claude.com/docs/en/skills#getting-started" target="_blank">创建第一个 Skill</a></li>
+        <li><a href="https://code.claude.com/docs/en/skills#bundled-skills" target="_blank">内置 Skill 说明</a></li>
+        <li><a href="https://code.claude.com/docs/en/skills#share-skills" target="_blank">分享 Skill</a></li>
+        <li><a href="https://code.claude.com/docs/en/skills#troubleshooting" target="_blank">常见问题</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Claude Skills Hub · 数据来源：Anthropic 官方文档、GitHub 公开仓库及社区统计。本站为独立整理，非 Anthropic 官方出品。</p>
+    <div class="footer-badges">
+      <span class="footer-badge">Claude Code</span>
+      <span class="footer-badge">Skills Directory</span>
+      <span class="footer-badge">开源友好</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const SKILLS = [
+  // ── BUNDLED ──
+  {
+    id: 'simplify',
+    name: '代码精简与重构',
+    cmd: '/simplify',
+    icon: '✨',
+    iconBg: '#eff6ff',
+    cardColor: '#3b82f6', cardColor2: '#60a5fa',
+    type: 'bundled',
+    category: 'dev',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999999,
+    shortDesc: '审查近期改动文件，自动发现并修复代码复用机会、质量问题和效率缺陷。',
+    fullDesc: '对最近修改过的文件执行深度代码审查，自动识别可提取的公共函数、冗余逻辑、可读性问题和效率低下之处，然后直接修复它们。这是 Claude Code 用户每次提交前最常用的技能之一。',
+    features: [
+      '识别重复代码，自动提取为可复用函数',
+      '检测低效的算法模式并建议替换',
+      '改善变量命名、函数拆分和注释质量',
+      '适用于所有主流编程语言',
+      '无需配置，开箱即用'
+    ],
+    install: '# 内置 Skill，直接在 Claude Code 中输入：\n/simplify',
+    tags: ['重构', '代码质量', '自动修复', '内置'],
+    docs: 'https://code.claude.com/docs/en/commands',
+    popular: 100
+  },
+  {
+    id: 'review',
+    name: '代码审查',
+    cmd: '/review',
+    icon: '🔍',
+    iconBg: '#ecfdf5',
+    cardColor: '#059669', cardColor2: '#10b981',
+    type: 'bundled',
+    category: 'dev',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999998,
+    shortDesc: '对最近一次提交以来的所有改动执行系统性代码审查，涵盖 Bug、安全隐患和最佳实践。',
+    fullDesc: '执行全面的代码审查，检查自上次 git commit 以来的所有变更。涵盖逻辑错误、空指针、越界访问、SQL 注入、XSS、CSRF 等安全漏洞，以及架构设计和代码风格问题。是合并代码前的最后一道防线。',
+    features: [
+      '检查 Bug：空指针、数组越界、竞态条件',
+      '发现安全漏洞：注入攻击、认证绕过',
+      '评估架构设计：耦合度、单一职责',
+      '提供可操作的改进建议（附代码示例）',
+      '支持多语言：Python、TypeScript、Go、Rust 等'
+    ],
+    install: '# 内置 Skill，直接在 Claude Code 中输入：\n/review',
+    tags: ['代码审查', '安全', 'PR', '内置'],
+    docs: 'https://code.claude.com/docs/en/commands',
+    popular: 99
+  },
+  {
+    id: 'debug',
+    name: '系统调试',
+    cmd: '/debug',
+    icon: '🐛',
+    iconBg: '#fef2f2',
+    cardColor: '#ef4444', cardColor2: '#f87171',
+    type: 'bundled',
+    category: 'dev',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999997,
+    shortDesc: '从错误日志和堆栈跟踪入手，系统性地定位根因并提出精准修复方案。',
+    fullDesc: '遇到报错时，将错误信息或日志粘贴给 Claude 后触发 /debug。它会系统性地分析错误类型、追踪调用链、缩小可疑范围，然后给出有针对性的修复方案。特别擅长处理难以复现的偶发性错误和多层嵌套的异常。',
+    features: [
+      '解析 Stack Trace，精准定位出错行',
+      '分析错误模式：环境问题、逻辑错误、依赖冲突',
+      '给出最小可复现案例',
+      '提供修复代码，并解释根因',
+      '支持前端、后端、数据库等全栈调试场景'
+    ],
+    install: '# 内置 Skill，直接在 Claude Code 中输入：\n/debug',
+    tags: ['调试', '错误排查', 'Stack Trace', '内置'],
+    docs: 'https://code.claude.com/docs/en/commands',
+    popular: 98
+  },
+  {
+    id: 'security-review',
+    name: '安全审计',
+    cmd: '/security-review',
+    icon: '🔒',
+    iconBg: '#fef2f2',
+    cardColor: '#dc2626', cardColor2: '#ef4444',
+    type: 'bundled',
+    category: 'security',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999996,
+    shortDesc: '对当前分支的所有改动进行自动化安全漏洞扫描，覆盖 OWASP Top 10 及常见攻击面。',
+    fullDesc: '对当前 git 分支上的所有待提交变更执行专项安全审计。覆盖 OWASP Top 10（2025 版）：注入攻击、失效认证、敏感数据泄露、XML 外部实体、权限控制失效、安全配置错误、XSS、反序列化、依赖漏洞、日志不足。特别适合在 PR 合并前运行。',
+    features: [
+      '覆盖 OWASP Top 10（2025 版）全部漏洞类型',
+      '检测硬编码密钥、Token 和密码',
+      '识别不安全的依赖版本',
+      '评估认证、授权、加密实现',
+      '输出结构化的安全报告（按严重程度分级）'
+    ],
+    install: '# 内置 Skill，直接在 Claude Code 中输入：\n/security-review',
+    tags: ['安全', 'OWASP', '漏洞扫描', '内置'],
+    docs: 'https://support.claude.com/en/articles/11932705-automated-security-reviews-in-claude-code',
+    popular: 97
+  },
+  {
+    id: 'init',
+    name: '初始化项目文档',
+    cmd: '/init',
+    icon: '📝',
+    iconBg: '#f5f3ff',
+    cardColor: '#7c3aed', cardColor2: '#a78bfa',
+    type: 'bundled',
+    category: 'dev',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999995,
+    shortDesc: '自动扫描代码库，生成 CLAUDE.md 文件，为 Claude 提供跨会话的持久项目上下文。',
+    fullDesc: 'CLAUDE.md 是 Claude Code 的"项目说明书"，每次对话都会自动加载。/init 会扫描你的项目结构、主要文件、技术栈、测试命令、代码风格约定，自动生成这份文档。一次初始化，所有会话中 Claude 都能记住你的项目规范，无需反复说明。',
+    features: [
+      '自动检测项目技术栈（框架、语言、依赖）',
+      '提取测试命令、构建命令等常用脚本',
+      '记录代码风格约定和架构约定',
+      '生成的 CLAUDE.md 可手动补充编辑',
+      '跨会话持久记忆，避免重复说明项目背景'
+    ],
+    install: '# 内置 Skill，直接在 Claude Code 中输入：\n/init',
+    tags: ['项目初始化', 'CLAUDE.md', '上下文', '内置'],
+    docs: 'https://code.claude.com/docs/en/memory',
+    popular: 96
+  },
+  {
+    id: 'claude-api',
+    name: 'Claude API 开发助手',
+    cmd: '/claude-api',
+    icon: '🤖',
+    iconBg: '#fff7ed',
+    cardColor: '#d97706', cardColor2: '#f59e0b',
+    type: 'bundled',
+    category: 'dev',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999994,
+    shortDesc: '加载 Anthropic SDK 和 API 参考，当检测到 SDK 导入时自动触发，专为 Claude API 开发优化。',
+    fullDesc: '专为构建基于 Anthropic SDK 的应用而设计。当你的代码中出现 anthropic 或 @anthropic-ai/sdk 导入时自动激活，提供最新的 API 参考、最佳实践（包括 Prompt Caching、Extended Thinking、Tool Use）、错误处理模板和迁移指南。',
+    features: [
+      '自动识别 Anthropic SDK 导入并激活',
+      '提供 Streaming、Batch、Tool Use 的代码模板',
+      '内置 Prompt Caching 最佳实践（降低 90% 成本）',
+      '覆盖 Claude 4.x 系列最新模型用法',
+      '支持 Python 和 TypeScript/Node.js SDK'
+    ],
+    install: '# 内置 Skill，检测到 SDK 导入时自动触发，或手动输入：\n/claude-api',
+    tags: ['Anthropic SDK', 'API', '开发', '内置'],
+    docs: 'https://platform.claude.com/docs/en/agents-and-tools/agent-skills/claude-api-skill',
+    popular: 93
+  },
+  {
+    id: 'batch',
+    name: '大规模并行重构',
+    cmd: '/batch',
+    icon: '⚡',
+    iconBg: '#f0fdf4',
+    cardColor: '#16a34a', cardColor2: '#22c55e',
+    type: 'bundled',
+    category: 'automation',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999993,
+    shortDesc: '将大规模代码库改动分解为 5–30 个独立子任务，通过并行 Worktree Agent 同时执行，大幅缩短等待时间。',
+    fullDesc: '当你需要在整个代码库中完成一个大型任务（如：将所有 React Class Component 转换为 Function Component，或全局替换某个 API 调用），/batch 会将任务智能分解为 5–30 个独立工作单元，在隔离的 Git Worktree 中并行运行，最后合并结果。把数小时的手工改动压缩到分钟级别。',
+    features: [
+      '智能分解大任务为独立工作单元（5–30 个）',
+      '在隔离 Git Worktree 中并行执行',
+      '每个子任务独立，互不干扰',
+      '自动合并所有子任务结果',
+      '全程可观测，展示每个子任务进度'
+    ],
+    install: '# 内置 Skill，直接在 Claude Code 中输入（附带任务描述）：\n/batch 将所有 Class Component 转为 Function Component',
+    tags: ['并行', '大规模重构', 'Worktree', '内置'],
+    docs: 'https://code.claude.com/docs/en/commands',
+    popular: 91
+  },
+  {
+    id: 'loop',
+    name: '定时任务循环',
+    cmd: '/loop',
+    icon: '🔄',
+    iconBg: '#f5f3ff',
+    cardColor: '#8b5cf6', cardColor2: '#a78bfa',
+    type: 'bundled',
+    category: 'automation',
+    author: 'Anthropic (内置)',
+    authorType: 'bundled',
+    installs: '∞ 内置',
+    installsSort: 9999992,
+    shortDesc: '在当前会话中按固定时间间隔反复执行某个 Prompt 或 Slash Command，适合持续监控和重复性任务。',
+    fullDesc: '当你需要 Claude Code 定期执行某项检查（如每 5 分钟运行一次测试、每 10 分钟检查 CI 状态、持续监控某个接口的响应）时，/loop 让你无需离开终端。可以配合其他 Skills 使用，如 /loop 5m /review。',
+    features: [
+      '支持自定义时间间隔（如 5m、10m、1h）',
+      '可循环执行任意 Prompt 或 Slash Command',
+      '与 /review、/debug 等 Skill 无缝组合',
+      '会话内有效，关闭终端后停止',
+      '适合 CI 状态监控、自动化 QA 流程'
+    ],
+    install: '# 内置 Skill，示例：每 5 分钟执行一次代码审查\n/loop 5m /review',
+    tags: ['定时任务', '循环', '监控', '内置'],
+    docs: 'https://code.claude.com/docs/en/commands',
+    popular: 85
+  },
+
+  // ── OFFICIAL (anthropics) ──
+  {
+    id: 'frontend-design',
+    name: '高质感前端设计',
+    cmd: '/frontend-design',
+    icon: '🎨',
+    iconBg: '#fdf4ff',
+    cardColor: '#9333ea', cardColor2: '#c084fc',
+    type: 'official',
+    category: 'design',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '277K+',
+    installsSort: 277000,
+    shortDesc: '生成具有独特视觉风格的生产级前端界面，彻底告别"AI 味"设计。支持 React、Vue、Tailwind 等主流框架。',
+    fullDesc: '这是官方下载量最高的 Skill（277K+ 装机）。在编码前先思考设计方向：确定审美基调（极简主义、复古未来风、编辑感排版…），选择个性化字体，构建内聚的色彩系统，添加有意义的微动画，创造令人印象深刻的布局。明确禁止使用 Inter/Arial、紫色渐变等"AI 套路"。',
+    features: [
+      '预设 50+ 审美风格和 21 种精选配色方案',
+      '50 种高质量字体搭配推荐',
+      '内置动效指南：滚动触发、悬停状态、页面加载',
+      '支持 React、Next.js、Vue、Svelte、Tailwind',
+      '严格禁止通用 AI 设计模式（防止千篇一律）'
+    ],
+    install: 'npx skills add anthropics/claude-code --skill frontend-design',
+    tags: ['前端', 'UI设计', 'React', 'Tailwind', '高热'],
+    docs: 'https://github.com/anthropics/claude-code/blob/main/plugins/frontend-design/skills/frontend-design/SKILL.md',
+    popular: 95
+  },
+  {
+    id: 'canvas-design',
+    name: '视觉艺术创作',
+    cmd: '/canvas-design',
+    icon: '🖼️',
+    iconBg: '#fdf4ff',
+    cardColor: '#ec4899', cardColor2: '#f472b6',
+    type: 'official',
+    category: 'design',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '18K+',
+    installsSort: 18000,
+    shortDesc: '使用专业设计哲学生成 PNG 和 PDF 格式的精美视觉作品，适合海报、封面、图表等场景。',
+    fullDesc: '基于专业平面设计原则，通过代码（Python + PIL/Pillow 或 SVG）生成高分辨率的视觉作品。可以制作信息图、数据可视化海报、社交媒体封面图、演示文稿配图等。每次输出都包含独特的审美判断，而不是模板填充。',
+    features: [
+      '输出高分辨率 PNG 和矢量 PDF 格式',
+      '基于设计理论（格式塔、黄金比例、色彩心理学）',
+      '支持自定义品牌色彩和字体',
+      '适合信息图、海报、封面图等场景',
+      '可集成到自动化图片生成流程'
+    ],
+    install: 'npx skills add anthropics/skills --skill canvas-design',
+    tags: ['平面设计', '视觉艺术', 'PNG', '海报'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 72
+  },
+  {
+    id: 'web-artifacts-builder',
+    name: 'Web Artifact 构建',
+    cmd: '/web-artifacts-builder',
+    icon: '🏗️',
+    iconBg: '#eff6ff',
+    cardColor: '#2563eb', cardColor2: '#60a5fa',
+    type: 'official',
+    category: 'design',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '22K+',
+    installsSort: 22000,
+    shortDesc: '在 Claude.ai 中构建复杂的 HTML Artifact，使用 React、Tailwind CSS 和 shadcn/ui 组件体系。',
+    fullDesc: '专为在 Claude.ai 的 Artifact 面板中构建可交互的 Web 组件而优化。使用 React + Tailwind + shadcn/ui 技术栈，能够创建带有真实交互逻辑的完整 Web 应用原型。非常适合快速验证产品想法或制作 Demo。',
+    features: [
+      '深度集成 shadcn/ui 全套 60+ 组件',
+      '支持复杂状态管理和用户交互',
+      '自动处理 Tailwind 配置和组件导入',
+      '生成可直接嵌入网页的自包含代码',
+      '适合产品原型、交互 Demo、组件展示'
+    ],
+    install: 'npx skills add anthropics/skills --skill web-artifacts-builder',
+    tags: ['React', 'shadcn/ui', 'Tailwind', 'Artifact'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 76
+  },
+  {
+    id: 'mcp-builder',
+    name: 'MCP 服务器构建',
+    cmd: '/mcp-builder',
+    icon: '🔌',
+    iconBg: '#ecfdf5',
+    cardColor: '#059669', cardColor2: '#34d399',
+    type: 'official',
+    category: 'dev',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '31K+',
+    installsSort: 31000,
+    shortDesc: '提供完整的 MCP Server 开发指南，帮助你把任意外部 API 接入 Claude，扩展其工具调用能力。',
+    fullDesc: 'Model Context Protocol (MCP) 是 Claude 连接外部工具的标准协议。/mcp-builder 提供从设计到实现的完整指南：如何定义工具 Schema、处理认证、管理连接池、处理错误和超时。让你快速将内部数据库、私有 API 或第三方服务接入 Claude Code。',
+    features: [
+      '完整 MCP Server 开发路线图',
+      '工具 Schema 设计最佳实践',
+      'OAuth、API Key 等认证模式模板',
+      'Python 和 TypeScript 双语言实现示例',
+      '常见错误处理和调试技巧'
+    ],
+    install: 'npx skills add anthropics/skills --skill mcp-builder',
+    tags: ['MCP', 'API集成', '工具开发', '协议'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 80
+  },
+  {
+    id: 'webapp-testing',
+    name: 'Web 应用自动化测试',
+    cmd: '/webapp-testing',
+    icon: '🧪',
+    iconBg: '#ecfdf5',
+    cardColor: '#0891b2', cardColor2: '#22d3ee',
+    type: 'official',
+    category: 'dev',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '24K+',
+    installsSort: 24000,
+    shortDesc: '使用 Playwright 对本地 Web 应用进行 UI 自动化测试，支持截图比对和交互验证。',
+    fullDesc: '通过 Playwright 控制真实浏览器，对本地运行的 Web 应用执行自动化 UI 测试。可以验证页面渲染、表单交互、导航流程，捕获截图进行视觉回归测试。特别适合在 AI 生成前端代码后立即验证功能正确性。',
+    features: [
+      '控制 Chromium/Firefox/WebKit 真实浏览器',
+      '自动捕获页面截图和交互录像',
+      '表单填写、点击、导航等完整交互模拟',
+      '视觉回归检测（前后截图对比）',
+      '错误时自动输出调试信息'
+    ],
+    install: 'npx skills add anthropics/skills --skill webapp-testing',
+    tags: ['Playwright', '自动化测试', 'UI测试', '浏览器'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 78
+  },
+  {
+    id: 'skill-creator',
+    name: 'Skill 创建向导',
+    cmd: '/skill-creator',
+    icon: '🪄',
+    iconBg: '#fff7ed',
+    cardColor: '#d97706', cardColor2: '#fbbf24',
+    type: 'official',
+    category: 'dev',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '15K+',
+    installsSort: 15000,
+    shortDesc: '交互式引导你从零创建属于自己的 Claude Code Skill，包括 SKILL.md 模板、参数设计和测试方法。',
+    fullDesc: '如果你有一套经常重复粘贴给 Claude 的流程、检查清单或规范，就应该把它封装成 Skill。/skill-creator 会引导你回答几个关键问题，然后自动生成完整的 SKILL.md 文件，包括 Frontmatter 配置、使用说明、参数定义和调用示例。',
+    features: [
+      '交互式问答，零门槛创建 Skill',
+      '自动生成完整 SKILL.md 模板',
+      '指导设计合理的 Frontmatter 配置',
+      '提供触发条件（description/when_to_use）优化建议',
+      '内置测试方法说明'
+    ],
+    install: 'npx skills add anthropics/skills --skill skill-creator',
+    tags: ['创建Skill', '模板', '元工具', '教程'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 68
+  },
+
+  // ── DOCUMENT SKILLS ──
+  {
+    id: 'docx',
+    name: 'Word 文档操作',
+    cmd: '/docx',
+    icon: '📘',
+    iconBg: '#eff6ff',
+    cardColor: '#1d4ed8', cardColor2: '#3b82f6',
+    type: 'official',
+    category: 'docs',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '19K+',
+    installsSort: 19000,
+    shortDesc: '创建、编辑和分析 Word 文档，支持修订跟踪、批注、样式格式保留和文本提取。',
+    fullDesc: '完整的 .docx 文档处理能力。可以从头创建格式规范的 Word 文档，对现有文档进行修改（保留原有格式和样式），提取文本和表格内容，添加修订批注。特别适合合同、报告、需求文档等业务场景。',
+    features: [
+      '创建带有标题、段落、表格的完整 Word 文档',
+      '保留原始样式和格式（字体、颜色、缩进）',
+      '支持修订跟踪（Track Changes）和批注',
+      '提取文本、表格和元数据',
+      '使用 python-docx 实现，无需 Microsoft Office'
+    ],
+    install: 'npx skills add anthropics/skills --skill docx',
+    tags: ['Word', '.docx', '文档', '办公自动化'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 71
+  },
+  {
+    id: 'pdf',
+    name: 'PDF 文档处理',
+    cmd: '/pdf',
+    icon: '📕',
+    iconBg: '#fef2f2',
+    cardColor: '#dc2626', cardColor2: '#f87171',
+    type: 'official',
+    category: 'docs',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '23K+',
+    installsSort: 23000,
+    shortDesc: '全面的 PDF 操作工具：文本提取、表格识别、元数据读取、合并拆分，以及新 PDF 的编程生成。',
+    fullDesc: '完整的 PDF 处理工具集。支持从扫描件中提取文字（OCR）、识别并转换表格为结构化数据、读取/修改文档元数据、合并多个 PDF 或拆分单个文件。还可以从头生成包含文本、图片和表格的新 PDF 文件。',
+    features: [
+      '智能文本提取（含扫描件 OCR）',
+      '表格自动识别并导出为 CSV/JSON',
+      '元数据读取与修改（作者、创建日期等）',
+      'PDF 合并、拆分和页面重排',
+      '以编程方式生成格式化的新 PDF'
+    ],
+    install: 'npx skills add anthropics/skills --skill pdf',
+    tags: ['PDF', '文本提取', 'OCR', '文档处理'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 74
+  },
+  {
+    id: 'pptx',
+    name: 'PowerPoint 演示文稿',
+    cmd: '/pptx',
+    icon: '📊',
+    iconBg: '#fff7ed',
+    cardColor: '#ea580c', cardColor2: '#fb923c',
+    type: 'official',
+    category: 'docs',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '17K+',
+    installsSort: 17000,
+    shortDesc: '创建和编辑 PowerPoint 演示文稿，支持自定义布局、模板、图表和自动化批量生成。',
+    fullDesc: '使用 python-pptx 创建和修改 .pptx 文件。可以根据数据自动批量生成幻灯片（如销售报表、周报），应用自定义母版和主题，插入图表和表格，提取现有 PPT 的文本内容。',
+    features: [
+      '基于数据自动生成幻灯片（批量化）',
+      '支持自定义幻灯片母版和主题',
+      '插入 条形图、折线图、饼图等数据图表',
+      '文本和图片的精确位置控制',
+      '从现有 PPT 提取内容用于分析'
+    ],
+    install: 'npx skills add anthropics/skills --skill pptx',
+    tags: ['PowerPoint', '.pptx', '演示', '办公自动化'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 67
+  },
+  {
+    id: 'xlsx',
+    name: 'Excel 表格分析',
+    cmd: '/xlsx',
+    icon: '📗',
+    iconBg: '#ecfdf5',
+    cardColor: '#15803d', cardColor2: '#22c55e',
+    type: 'official',
+    category: 'docs',
+    author: 'Anthropic',
+    authorType: 'official',
+    installs: '21K+',
+    installsSort: 21000,
+    shortDesc: '创建和分析 Excel 电子表格，支持公式、格式化、数据分析和可视化图表生成。',
+    fullDesc: '完整的 Excel 文件处理能力。可以读取任意 .xlsx 文件进行数据分析、创建带有复杂公式的新表格、应用条件格式、插入数据透视表，以及生成内嵌图表。特别适合财务报表、数据分析和报告自动化场景。',
+    features: [
+      '读取并分析 Excel 数据（含多 Sheet）',
+      '创建带有 VLOOKUP、SUMIF 等复杂公式的表格',
+      '条件格式化、单元格样式和颜色编码',
+      '自动生成内嵌条形图、折线图、散点图',
+      '数据清洗、去重、排序和筛选'
+    ],
+    install: 'npx skills add anthropics/skills --skill xlsx',
+    tags: ['Excel', '.xlsx', '数据分析', '办公自动化'],
+    docs: 'https://github.com/anthropics/skills',
+    popular: 73
+  },
+
+  // ── COMMUNITY ──
+  {
+    id: 'obra-superpowers',
+    name: 'Superpowers 开发框架',
+    cmd: '/brainstorm + /write-plan + /execute-plan',
+    icon: '🦸',
+    iconBg: '#fdf4ff',
+    cardColor: '#7c3aed', cardColor2: '#a855f7',
+    type: 'community',
+    category: 'dev',
+    author: 'obra (40.9K ⭐)',
+    authorType: 'community',
+    installs: '40.9K ⭐',
+    installsSort: 40900,
+    shortDesc: '覆盖完整 SDLC 的 20+ 可组合技能集合：脑暴 → 规划 → 并行实现 → TDD → 代码审查，是社区最受欢迎的 Skill 框架。',
+    fullDesc: 'obra/superpowers 是社区中 Star 数最高（40.9K）的 Skill 框架，提供涵盖完整软件开发生命周期的 20+ 个可组合 Skill：头脑风暴（/brainstorm）→ 制定计划（/write-plan）→ 并行执行（/execute-plan，自动启用多个 Worktree Agent）→ TDD 测试驱动开发 → 代码审查。每个 Skill 都是独立的，也可以链式组合。',
+    features: [
+      '/brainstorm：结构化头脑风暴，生成可执行的想法列表',
+      '/write-plan：将需求转化为详细的实现计划文档',
+      '/execute-plan：并行 Worktree Agent 执行计划',
+      'TDD 模式：先写测试，再写实现',
+      '/worktree-merge：合并所有并行分支的成果'
+    ],
+    install: 'npx skills add obra/superpowers',
+    tags: ['SDLC', '框架', '并行', 'TDD', '社区精选'],
+    docs: 'https://github.com/obra/superpowers',
+    popular: 90
+  },
+  {
+    id: 'shadcn-ui',
+    name: 'shadcn/ui 组件规范',
+    cmd: '/shadcn-ui',
+    icon: '🧩',
+    iconBg: '#f8fafc',
+    cardColor: '#0f172a', cardColor2: '#334155',
+    type: 'community',
+    category: 'design',
+    author: 'shadcn (社区)',
+    authorType: 'community',
+    installs: '12K+',
+    installsSort: 12000,
+    shortDesc: '为 Claude 提供完整的 shadcn/ui 组件上下文，确保代码使用正确的组件 API 和模式，避免过时用法。',
+    fullDesc: 'shadcn/ui 版本迭代频繁，Claude 训练数据中的组件用法往往已经过时。这个 Skill 提供最新的组件 API、Props 定义、安装命令和使用模式，确保 Claude 生成的代码直接可用，无需手动修正。',
+    features: [
+      '覆盖 shadcn/ui 全部 60+ 组件的最新 API',
+      '提供每个组件的安装命令（npx shadcn add）',
+      '常见组合模式：表单、数据表格、导航等',
+      '深色/浅色模式切换的正确实现',
+      '与 React Hook Form、Zod 的集成示例'
+    ],
+    install: 'npx skills add shadcn/ui',
+    tags: ['shadcn/ui', 'React', '组件库', 'UI'],
+    docs: 'https://github.com/shadcn-ui/ui',
+    popular: 75
+  },
+  {
+    id: 'code-review-skill',
+    name: '深度代码审查',
+    cmd: '/code-review',
+    icon: '🧐',
+    iconBg: '#ecfdf5',
+    cardColor: '#047857', cardColor2: '#10b981',
+    type: 'community',
+    category: 'security',
+    author: 'awesome-skills',
+    authorType: 'community',
+    installs: '8K+',
+    installsSort: 8000,
+    shortDesc: '针对现代技术栈的专项深度代码审查：React 19、Vue 3、TypeScript、Rust、TanStack Query v5 等。',
+    fullDesc: '比内置 /review 更专深的代码审查 Skill，专门针对 React 19（Server Components、Actions）、Vue 3（Composition API）、Rust（所有权、生命周期）、TypeScript 5.x（最新类型系统特性）以及 TanStack Query v5 等现代框架的最佳实践和常见陷阱。',
+    features: [
+      'React 19：Server Components、use() Hook、Actions',
+      'TypeScript：类型收窄、条件类型、模板字面量类型',
+      'Rust：所有权、借用规则、Panic 处理',
+      'TanStack Query v5：新 API 迁移和最佳实践',
+      '性能优化：虚拟化、懒加载、Memoization'
+    ],
+    install: 'npx skills add awesome-skills/code-review-skill',
+    tags: ['React 19', 'TypeScript', 'Rust', '深度审查'],
+    docs: 'https://github.com/awesome-skills/code-review-skill',
+    popular: 69
+  },
+  {
+    id: 'playwright-skill',
+    name: 'Playwright 浏览器自动化',
+    cmd: '/playwright',
+    icon: '🎭',
+    iconBg: '#f0fdf4',
+    cardColor: '#16a34a', cardColor2: '#4ade80',
+    type: 'community',
+    category: 'dev',
+    author: '社区 (Community)',
+    authorType: 'community',
+    installs: '9K+',
+    installsSort: 9000,
+    shortDesc: '超越单元测试的 Playwright 通用浏览器自动化：数据采集、表单填写、截图生成、PDF 打印等。',
+    fullDesc: '不只是测试框架——这个 Skill 把 Playwright 的全部潜力带给 Claude：自动化数据采集、批量截图、网页转 PDF、复杂表单自动填写、前端性能指标采集。当 /webapp-testing 侧重 QA 时，/playwright 侧重通用浏览器自动化。',
+    features: [
+      '网页截图和全页截图（高分辨率）',
+      '批量自动填写和提交 Web 表单',
+      '网页转 PDF（精确控制页面布局）',
+      '采集动态渲染的 SPA 数据',
+      'Core Web Vitals 性能指标采集'
+    ],
+    install: 'npx skills add community/playwright-skill',
+    tags: ['Playwright', '浏览器', '自动化', '爬虫'],
+    docs: 'https://github.com/hesreallyhim/awesome-claude-code',
+    popular: 70
+  },
+  {
+    id: 'frontend-slides',
+    name: '动效演示文稿',
+    cmd: '/frontend-slides',
+    icon: '🎬',
+    iconBg: '#fff7ed',
+    cardColor: '#c2410c', cardColor2: '#f97316',
+    type: 'community',
+    category: 'design',
+    author: '社区 (Community)',
+    authorType: 'community',
+    installs: '7K+',
+    installsSort: 7000,
+    shortDesc: '用代码生成富动效的 HTML/CSS 演示文稿，告别 PPT，用 Web 技术创建令人印象深刻的 Slides。',
+    fullDesc: '使用纯 HTML、CSS 和轻量 JS 创建具有流畅过渡动画的演示文稿。生成的幻灯片直接在浏览器中运行，支持键盘导航，可以轻松部署到任何静态托管平台。特别适合技术分享、产品 Demo 和方案汇报。',
+    features: [
+      '流畅的幻灯片切换动画（CSS transitions）',
+      '代码高亮（Prism.js 集成）',
+      '键盘和触摸手势导航',
+      '响应式设计，适配各种屏幕尺寸',
+      '单 HTML 文件，零依赖部署'
+    ],
+    install: 'npx skills add community/frontend-slides',
+    tags: ['演示', 'Slides', 'HTML', '动效'],
+    docs: 'https://github.com/hesreallyhim/awesome-claude-code',
+    popular: 62
+  }
+];
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+let activeCat = 'all';
+let activeType = 'all';
+let searchQuery = '';
+let sortMode = 'popular';
+let currentSkill = null;
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+function getFiltered() {
+  let list = SKILLS.slice();
+  if (activeCat !== 'all') list = list.filter(s => s.category === activeCat);
+  if (activeType !== 'all') list = list.filter(s => s.type === activeType);
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    list = list.filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      s.cmd.toLowerCase().includes(q) ||
+      s.shortDesc.toLowerCase().includes(q) ||
+      s.tags.some(t => t.toLowerCase().includes(q))
+    );
+  }
+  if (sortMode === 'popular') list.sort((a, b) => b.popular - a.popular);
+  else if (sortMode === 'name') list.sort((a, b) => a.name.localeCompare(b.name, 'zh'));
+  else if (sortMode === 'type') {
+    const order = { bundled: 0, official: 1, community: 2 };
+    list.sort((a, b) => order[a.type] - order[b.type]);
+  }
+  return list;
+}
+
+function badgeHTML(type) {
+  if (type === 'bundled') return '<span class="author-badge badge-bundled">📦 内置</span>';
+  if (type === 'official') return '<span class="author-badge badge-official">✅ 官方</span>';
+  return '<span class="author-badge badge-community">🌐 社区</span>';
+}
+
+function renderCard(s, idx) {
+  const card = document.createElement('div');
+  card.className = 'skill-card';
+  card.style.setProperty('--card-color', s.cardColor);
+  card.style.setProperty('--card-color2', s.cardColor2);
+  card.style.setProperty('--icon-bg', s.iconBg);
+  card.style.animationDelay = `${idx * 0.04}s`;
+  card.innerHTML = `
+    <div class="card-head">
+      <div class="card-icon">${s.icon}</div>
+      <div class="card-meta">
+        <div class="card-name"><code>${s.cmd}</code></div>
+        <div class="card-author">${badgeHTML(s.authorType)} <span>${s.author}</span></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px">${s.name}</div>
+      <div class="card-desc">${s.shortDesc}</div>
+    </div>
+    <div class="card-tags">${s.tags.slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    <div class="card-footer">
+      <div class="card-installs">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <strong>${s.installs}</strong>&nbsp;装机
+      </div>
+      <div class="card-actions">
+        <button class="btn-copy" data-install="${escapeAttr(s.install)}" onclick="copyInstall(this, event)">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          复制
+        </button>
+        <button class="btn-detail" onclick="openModal('${s.id}', event)">
+          详情 →
+        </button>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function escapeAttr(str) {
+  return str.replace(/"/g, '&quot;').replace(/\n/g, '\\n');
+}
+
+function renderGrid() {
+  const grid = document.getElementById('skills-grid');
+  const filtered = getFiltered();
+  grid.innerHTML = '';
+
+  document.getElementById('grid-count').textContent = `共 ${filtered.length} 个`;
+
+  if (filtered.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `
+      <div class="emoji">🔍</div>
+      <h3>未找到匹配的 Skill</h3>
+      <p>试试其他关键词，或切换分类筛选</p>
+    `;
+    grid.appendChild(empty);
+    return;
+  }
+  filtered.forEach((s, i) => grid.appendChild(renderCard(s, i)));
+}
+
+// ─── COUNTS ─────────────────────────────────────────────────────────────────
+function updateCounts() {
+  const cats = ['bundled', 'design', 'dev', 'docs', 'security', 'automation'];
+  cats.forEach(cat => {
+    const el = document.getElementById('cnt-' + cat);
+    if (el) el.textContent = SKILLS.filter(s => s.category === cat).length;
+  });
+  document.getElementById('cnt-all').textContent = SKILLS.length;
+}
+
+// ─── FILTER EVENTS ──────────────────────────────────────────────────────────
+document.getElementById('cat-list').addEventListener('click', e => {
+  const item = e.target.closest('[data-cat]');
+  if (!item) return;
+  document.querySelectorAll('[data-cat]').forEach(el => el.classList.remove('active'));
+  item.classList.add('active');
+  activeCat = item.dataset.cat;
+  updateGridTitle();
+  renderGrid();
+});
+
+document.querySelectorAll('[data-type]').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('[data-type]').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+    activeType = el.dataset.type;
+    renderGrid();
+  });
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  sortMode = e.target.value;
+  renderGrid();
+});
+
+function updateGridTitle() {
+  const titles = {
+    all: ['全部 Skills', '官方内置 + Anthropic 官方 + 精选社区 Skill'],
+    bundled: ['内置 Skills', 'Claude Code 安装后自带，无需额外操作'],
+    design: ['设计与 UI', '前端界面、视觉设计、组件相关技能'],
+    dev: ['开发工具', '调试、测试、MCP、API 开发相关技能'],
+    docs: ['文档处理', 'Word、PDF、PPT、Excel 等办公文档技能'],
+    security: ['安全审计', '漏洞扫描、OWASP 检查、安全代码审查'],
+    automation: ['自动化工具', '批量处理、定时任务、并行执行技能'],
+  };
+  const [title, sub] = titles[activeCat] || titles.all;
+  document.getElementById('grid-title').innerHTML = `${title} <span style="color:var(--text3);font-weight:400;font-size:14px" id="grid-count">共 ${getFiltered().length} 个</span>`;
+  document.getElementById('grid-subtitle').textContent = sub;
+}
+
+// ─── SEARCH ─────────────────────────────────────────────────────────────────
+function handleSearch(val) {
+  searchQuery = val.trim();
+  renderGrid();
+  if (searchQuery) {
+    document.querySelectorAll('[data-cat]').forEach(el => el.classList.remove('active'));
+    document.querySelector('[data-cat="all"]').classList.add('active');
+    activeCat = 'all';
+  }
+}
+
+document.getElementById('hero-search-input').addEventListener('input', e => {
+  document.getElementById('nav-search-input').value = e.target.value;
+  handleSearch(e.target.value);
+  if (e.target.value) document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
+});
+document.getElementById('nav-search-input').addEventListener('input', e => {
+  document.getElementById('hero-search-input').value = e.target.value;
+  handleSearch(e.target.value);
+});
+
+// ─── COPY ───────────────────────────────────────────────────────────────────
+function copyToClipboard(text) {
+  const clean = text.replace(/^#.*\n?/gm, '').trim();
+  navigator.clipboard.writeText(clean).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = clean;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+function copyInstall(btn, e) {
+  e.stopPropagation();
+  const raw = btn.dataset.install.replace(/\\n/g, '\n');
+  copyToClipboard(raw);
+  const orig = btn.innerHTML;
+  btn.classList.add('copied');
+  btn.innerHTML = `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> 已复制`;
+  setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = orig; }, 2000);
+}
+
+// ─── MODAL ──────────────────────────────────────────────────────────────────
+function openModal(id, e) {
+  if (e) e.stopPropagation();
+  const s = SKILLS.find(x => x.id === id);
+  if (!s) return;
+  currentSkill = s;
+
+  document.getElementById('modal-icon').textContent = s.icon;
+  document.getElementById('modal-icon').style.background = s.iconBg;
+  document.getElementById('modal-name').textContent = s.name;
+  document.getElementById('modal-cmd').textContent = s.cmd;
+  document.getElementById('modal-desc').textContent = s.fullDesc;
+  document.getElementById('modal-installs').textContent = s.installs;
+  document.getElementById('modal-source').textContent =
+    s.type === 'bundled' ? '内置' : s.type === 'official' ? 'Anthropic 官方' : '社区';
+  document.getElementById('modal-install').textContent = s.install;
+  document.getElementById('modal-docs-link').href = s.docs;
+
+  const feats = document.getElementById('modal-features');
+  feats.innerHTML = s.features.map(f => `<div class="feature-item">${f}</div>`).join('');
+
+  const tagsEl = document.getElementById('modal-tags');
+  tagsEl.innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function copyModalInstall() {
+  if (!currentSkill) return;
+  copyToClipboard(currentSkill.install);
+  const btn = document.querySelector('.modal-footer .btn-primary');
+  const orig = btn.innerHTML;
+  btn.style.background = '#059669';
+  btn.innerHTML = '✓ 已复制';
+  setTimeout(() => { btn.style.background = ''; btn.innerHTML = orig; }, 2000);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModalDirect();
+});
+
+// ─── CARD CLICK TO OPEN MODAL ────────────────────────────────────────────────
+document.getElementById('skills-grid').addEventListener('click', e => {
+  const card = e.target.closest('.skill-card');
+  if (!card || e.target.closest('button')) return;
+  const btn = card.querySelector('[onclick*="openModal"]');
+  if (btn) {
+    const m = btn.getAttribute('onclick').match(/openModal\('([^']+)'/);
+    if (m) openModal(m[1]);
+  }
+});
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+updateCounts();
+renderGrid();
+</script>
+</body>
+</html>

@@ -154,16 +154,14 @@ rm -f ~/feishu_article.md
 ```markdown
 ### N.<标题>
 
-<开头 80-120 字简介，普通段落，不带 > 引用>
-
-<mention-doc token="<子文档node_token>" type="wiki"><标题></mention-doc>
+<开头 80-120 字简介，普通段落><mention-doc token="<子文档node_token>" type="wiki"><标题></mention-doc>
 ```
 
 要点：
 - **`### N.`** — H3 标题加编号点号（如 `### 1.王朔：80年代最亮的灯塔`），编号是当前父文档已有条目数 +1
 - **简介** — 转录稿开头 80-120 字到自然句末（普通段落，**不要**用 `>` 引用块）
-- **`<mention-doc>` 标签** — 飞书原生子文档卡片，参数 `token=<wiki node_token>`、`type="wiki"`、内文是子文档标题。会渲染成漂亮的卡片块
-- 三块之间用空行分隔
+- **`<mention-doc>` 标签** — 飞书原生子文档卡片，**紧跟在简介末尾、不换行不空行**。参数 `token=<wiki node_token>`、`type="wiki"`、内文是子文档标题。会渲染成行内卡片
+- H3 与简介之间用一个空行；简介和 mention-doc 在**同一段同一行**
 
 **实操：**
 
@@ -191,30 +189,45 @@ if end == -1:
 print(text[:end])
 ")
 
-# 4.7.3 拼出 markdown 并追加
+# 4.7.3 拼出 markdown 并追加（mention-doc 紧跟简介末尾，**同行**）
 cat > /root/parent_append.md <<EOF
 
 ### ${NEXT_NUM}.${TITLE}
 
-${PREVIEW}
-
-<mention-doc token="${NODE_TOKEN}" type="wiki">${TITLE}</mention-doc>
+${PREVIEW}<mention-doc token="${NODE_TOKEN}" type="wiki">${TITLE}</mention-doc>
 
 EOF
 
-cd ~ && lark-cli docs +update \
+# lark-cli +update 不接受绝对路径 --markdown，必须 cd 到文件目录后用相对路径
+cd /root && lark-cli docs +update \
   --doc SlNsdSpsPonrHrxZmbschfAOngd \
   --mode append \
-  --markdown @/root/parent_append.md
+  --markdown @parent_append.md
 
 rm -f /root/parent_append.md
 ```
 
 **说明**：
 - `SlNsdSpsPonrHrxZmbschfAOngd` 是父 wiki 节点底下绑定的 docx token（已锁定）
-- `<mention-doc token>` 用的是 **wiki node_token**，不是 docx obj_token
+- `<mention-doc token>` 写的时候用 **wiki node_token + type="wiki"**；fetch 回来 lark-cli 会把它转换成 `obj_token + type="docx"`，**功能等价、飞书渲染一样**，不要折腾把它转回去
 - 编号 N 自动从父文档现有最大值 +1，避免重号
 - 简介就是开头一段，不加 `>`，不加任何样式
+- mention-doc **紧跟简介句末，无空行无换行**
+
+### ⚠️ 改标题时的踩坑提醒
+
+要修改某条已发布的标题，需要**三处同步**：
+1. 子文档（wiki node）title
+2. 父节点的 H3 行
+3. 父节点的 mention-doc 内文
+
+**正确做法**（一次 overwrite 到位）：
+- 子文档：`lark-cli docs +update --doc <obj_token> --mode overwrite --new-title "新标题" --markdown @article.md`
+- 父节点：`fetch` 当前 markdown → Python 字符串替换 → `--mode overwrite` 整段重写
+
+**绝对不要做**：
+- 用 `--mode replace_range --selection-with-ellipsis` 单独打 H3 块（会变成 `### ###` 残留 + 留下孤悬空 H3）
+- 用 `--mode replace_range` 单独改 mention-doc 块（会出现重复 mention-doc + token 类型乱跳）
 
 ### Step 5：推飞书私信通知
 

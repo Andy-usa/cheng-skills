@@ -29,7 +29,7 @@ description: |
 - 一张播放量截图（图片附件 / 本地路径）
 - 上下文有"高晓松"或"热门口播"提示
 
-## 工作流（5 步）
+## 工作流（6 步）
 
 ### Step 1：转录（复用 wechat-to-lark）
 
@@ -120,7 +120,48 @@ DOC_URL="https://jmhm92ilup.feishu.cn/wiki/$NODE_TOKEN"
 rm -f ~/feishu_article.md
 ```
 
-⚠️ **不需要**手动给父节点追加链接条目——wiki 子节点天然挂在 `BFKhw668hiWF0dkIU0QcNLm2nJW` 下，会自动出现在父节点的"子文档"列表里。
+### Step 4.7：在父节点正文里追加目录条目（链接 + 引用预览）
+
+虽然子节点已经在 wiki 树里挂着，但用户希望在父节点正文中维护一份带预览的目录，扫一眼就知道每条讲什么。
+
+```bash
+# 取转录稿前 80-120 字作为预览，到第一个句号/问号/感叹号自然截断
+PREVIEW=$(python3 -c "
+text = open('<feishu_article 转录稿临时缓存>').read().strip()
+# 在 80~120 字范围内找第一个完整句末
+target = 100
+end = -1
+for i, ch in enumerate(text):
+    if ch in '。？！' and 60 <= i <= 140:
+        end = i + 1
+        break
+if end == -1:
+    end = min(120, len(text))
+print(text[:end])
+")
+
+# 写一段 markdown，append 到父节点底层 docx
+cat > ~/parent_append.md <<EOF
+
+[$TITLE](https://jmhm92ilup.feishu.cn/wiki/$NODE_TOKEN)
+
+> $PREVIEW
+
+EOF
+
+cd ~ && lark-cli docs +update \
+  --doc SlNsdSpsPonrHrxZmbschfAOngd \
+  --mode append \
+  --markdown @parent_append.md
+
+rm -f ~/parent_append.md
+```
+
+**说明**：
+- `SlNsdSpsPonrHrxZmbschfAOngd` 是父 wiki 节点底下绑定的 docx token（已锁定，无需重查）
+- `--mode append` 在父文档末尾追加，不动已有内容
+- 链接用 `wiki/<node_token>` 而非 `docx/<obj_token>`，进入子节点会显示完整 wiki 树
+- 引用预览取 80-120 字，到自然句末截断
 
 ### Step 5：推飞书私信通知
 
@@ -171,6 +212,13 @@ lark-cli im +messages-send --as bot \
 ```
 
 打开「高晓松热门口播」wiki 树，会看到 **🔥 高晓松热门口播 → 我这辈子没打过工** 这条新增子节点。
+
+父节点正文末尾会多一条索引：
+```
+我这辈子没打过工
+
+> 各位朋友大家好咱们聊过很多人很多作品今天不讲别人咱先聊聊我自己我这个人其实挺矛盾的一会儿说自己是有点正经的文化人一会儿又自称捣鼓事儿的老顽童。
+```
 
 打开子文档：
 - 标题：我这辈子没打过工

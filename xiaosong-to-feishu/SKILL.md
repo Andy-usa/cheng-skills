@@ -133,18 +133,35 @@ cd ~ && lark-cli docs +update \
   --mode overwrite \
   --markdown @feishu_article.md
 
-# 4.4 追加截图到文末
-lark-cli docs +media-insert \
+# 4.4 自动提取用户最新上传的截图（multimodal 在 session jsonl 里有 base64）
+SCREENSHOT=$(python3 ~/cheng-skills/xiaosong-to-feishu/scripts/extract_user_image.py)
+# SCREENSHOT 形如 /tmp/user_image.jpg
+# 如果用户在一次对话里发了多张图，--index -1 是最新（默认），-2 是倒数第二，依此类推
+# 想看清单：python3 .../extract_user_image.py --list
+
+# 4.5 把截图复制到 /tmp 改个易识别名字（lark-cli 强制要相对路径）
+cp "$SCREENSHOT" /tmp/screenshot.jpg
+cd /tmp && lark-cli docs +media-insert \
   --doc "$OBJ_TOKEN" \
-  --file "<截图本地绝对路径>" \
+  --file screenshot.jpg \
   --type image \
   --align center
 
-# 4.5 拼出 wiki 子节点的可分享 URL
+# 4.6 拼出 wiki 子节点的可分享 URL
 DOC_URL="https://jmhm92ilup.feishu.cn/wiki/$NODE_TOKEN"
 
-# 4.6 清理临时文件
-rm -f ~/feishu_article.md
+# 4.7 清理临时文件
+rm -f ~/feishu_article.md /tmp/screenshot.jpg /tmp/user_image.*
+```
+
+⚠️ **截图上传偶发"invalid response JSON"**——飞书后台偶尔返回 HTML 错误页（不是 JSON），lark-cli 解析失败。重试 1-2 次基本能过；要更稳就在 shell 里加 retry 循环：
+
+```bash
+for i in 1 2 3; do
+  R=$(cd /tmp && lark-cli docs +media-insert --doc "$OBJ_TOKEN" --file screenshot.jpg --type image --align center 2>&1)
+  echo "$R" | grep -q '"ok": true' && break
+  sleep $((i*3))
+done
 ```
 
 ### Step 4.7：在父节点正文里追加目录条目（编号 H3 + 简介 + 子文档卡片）
@@ -249,7 +266,8 @@ lark-cli im +messages-send --as bot \
 | 情况 | 处理 |
 |---|---|
 | 转录失败 | 看 `transcribe.py` stderr；多半是视频号 URL 过期或 DASHSCOPE_API_KEY 失效 |
-| 截图找不到 | 让用户重发图片（必须是本地文件路径，不能是 URL） |
+| 截图找不到 | 用 `python3 ~/cheng-skills/xiaosong-to-feishu/scripts/extract_user_image.py --list` 看 session jsonl 里所有图片清单；用 `--index N` 选对的那张。极端情况让用户重发图片 |
+| `+media-insert` 报 `invalid response JSON` | 飞书后台偶发 HTML 错误页，重试 1-3 次基本能过 |
 | `wiki +node-create` 报权限 | 需要 `wiki:node:create` scope，必要时 `lark-cli auth login --recommend` 重授权 |
 | `docs +media-insert` 报权限 | 需要 `docs:document.media:upload` scope |
 | 子文档创建成功但截图插入失败 | 子文档保留，截图可后续手动补；推消息时说明这一点 |
@@ -263,7 +281,8 @@ lark-cli im +messages-send --as bot \
 
 ## 依赖
 
-- `python3 ~/cheng-skills/wechat-to-lark/scripts/transcribe.py`
+- `python3 ~/cheng-skills/wechat-to-lark/scripts/transcribe.py`（视频转录）
+- `python3 ~/cheng-skills/xiaosong-to-feishu/scripts/extract_user_image.py`（从 session jsonl 提取用户上传的截图，自动落地）
 - `lark-cli`（user-level OAuth 已持久化）
 - 环境变量 `DASHSCOPE_API_KEY`
 

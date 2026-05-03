@@ -1,25 +1,21 @@
 [project]
 name = "wechat-channels-parser"
-version = "0.1.0"
-description = "企业微信微信客服 → 视频号链接解析服务"
+version = "0.2.0"
+description = "企业微信会话内容存档（msgaudit）→ 视频号转录到飞书"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi>=0.115",
-    "uvicorn[standard]>=0.32",
     "httpx>=0.27",
-    "pycryptodome>=3.21",
-    "xmltodict>=0.14",
     "pydantic-settings>=2.6",
     "loguru>=0.7",
+    # ⚠️ 会话存档 Python SDK 待选（详见 docs/python_sdk_options.md），
+    # 例如：wxwork-finance-sdk-python 或自行 ctypes 包 C SDK
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.3",
     "pytest-asyncio>=0.24",
-    "respx>=0.21",
-    "httpx>=0.27",
 ]
 
 [build-system]

@@ -23,6 +23,11 @@ data/*.json
 *.log
 logs/
 
+# RSA private keys — never commit
+*.pem
+*.key
+rsa_private_key*
+
 # Editor
 .vscode/
 .idea/

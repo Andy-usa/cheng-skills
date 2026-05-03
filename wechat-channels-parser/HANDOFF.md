@@ -1,133 +1,133 @@
-# 项目交接文件 — 给下一个 Claude Code Agent
+# 项目交接文件 v2 — 给下一个 Claude Code Agent
 
-> **你（Agent）现在接手的是一个 Phase 1 已完成的项目。**
-> 优先读完本文 + `PHASE1_VERIFY.md`，再开始任何动作。
-> **绝对不要凭记忆改业务代码或外部 API 调用。**
+> **重要：项目方向已经从 Phase 1 调整。** 旧的微信客服路径（kf-callback）已归档到 `_archive/phase1_kf_callback/`，**不要复用**。
+> 优先读完本文 + `PHASE2_PLAN.md`，再开始任何动作。
+> **绝对不要凭记忆写企业微信 SDK 调用或视频号反查接口。**
 
 ---
+
+## 为什么方向变了
+
+Phase 1 走的是「企业微信微信客服」回调路径。但用户实测发现：**微信原生的"转发"菜单里找不到微信客服会话**（微信客服没有独立聊天入口，要从企业微信小程序进），所以客户根本没法把视频号视频转发给微信客服号。
+
+**真正可行的路径**：让员工的企业微信号作为"客户联系"普通好友，客户转发到员工 → 用「**会话内容存档（msgaudit）**」拿到消息密文 → 解密 → 拉视频号信息 → 调 wechat-to-lark 转录。
+
+**一个关键约束**：会话存档**只能"读"，不能"代替员工回复客户"**——这是腾讯的红线。所以产品定位也变了：不再回复客户，转录结果直接推飞书私信给运营者本人（用户：程万云）。
 
 ## 项目身份
 
 - **名字**：wechat-channels-parser
-- **现版本**：0.1.0（Phase 1 完成）
-- **目的**：用户在微信里把视频号视频转发给企业微信客服号 → 服务端识别 → 解析视频 URL → 客服消息回复给用户
-- **原始 spec**：用户提供的 10 节需求文档，已严格遵循（核心约束见 §"不能干的事"）
+- **现版本**：0.2.0（v1 归档；v2 重新搭骨架，等本地 SDK 集成）
+- **目的**：客户给员工发视频号 → msgaudit 解出 sphfeed → 调 wechat-to-lark 转录到飞书
+- **不再做**：回复客户、即时双向对话
 
-## 现状（移交时）
+## 现状
 
 | 模块 | 状态 |
 |---|---|
-| 项目骨架 + pyproject.toml + .env.example | ✅ 完成 |
-| `app/crypto.py` WXBizMsgCrypt | ✅ 完成 + 10 单测 |
-| `app/access_token.py` | ✅ 完成 |
-| `app/state.py` 持久化 | ✅ 完成 + 6 单测 |
-| `app/kf_client.py` sync_msg / send_msg | ✅ 完成 + 5 单测（respx mock）|
-| `app/handlers.py` 业务分发 | ✅ 完成 + 6 单测 |
-| `app/main.py` FastAPI 端点 | ✅ 完成 + 5 单测（TestClient）|
-| `app/channels_parser.py` | ⚠️ **Stub**（返回 mock，等 Phase 2 接入真实反查）|
-| 真机验证 | ❌ 未做（沙箱跑不了，必须在本地 + 真实企业微信账号）|
+| `app/config.py` 加 msgaudit 字段 | ✅ |
+| `app/state.py` 改成 msgaudit_seq | ✅ + 6 测试通过 |
+| `app/channels_parser.py` stub | ✅（如果 sphfeed 不直接给 mp4 url 才会用到） |
+| `app/msgaudit/models.py` | ⚠️ **Stub**：sphfeed 字段名是猜的，**真机 dump 后改** |
+| `app/msgaudit/client.py` | ⚠️ **Stub**：等本地选 SDK（`docs/python_sdk_options.md`） |
+| `app/msgaudit/worker.py` | ✅ 骨架，依赖 client 实现 |
+| `app/pipelines/sphfeed_to_lark.py` | ✅ 骨架，依赖 wechat-to-lark skill 在本机 |
+| 会话存档开通 | ❌ 用户必须人工去后台搞（认证 + 付费 + 上传公钥 + 员工授权） |
+| 真机 dump sphfeed 样本 | ❌ Step 4，开通后第一件事 |
+| Phase 2 视频号反查 | ❌ 仅当 sphfeed 不直接给 mp4 url 才需要 |
 
-**测试现状**：`python3 -m pytest -v` → 32 passed in ~5s
+**测试现状**：`python3 -m pytest -v` → 6 passed（state.py）
 
-## 你的任务清单（按优先级）
+## 你的任务清单（按顺序）
 
-### 1. 让项目在本地跑起来（先打通环境）
+详见 `PHASE2_PLAN.md`，关键步骤：
 
+### 1. 跑测试 + 看代码
 ```bash
 cd wechat-channels-parser
-cp .env.example .env
-# 编辑 .env 填入用户提供的真实企业微信凭据（5 个必填项）
-
-pip install -e ".[dev]"      # 或 uv pip install -e ".[dev]"
-python3 -m pytest             # 验证 32 测试全绿
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+pip install -e ".[dev]"
+python3 -m pytest -v   # 应该 6 个 state 测试通过
 ```
+逐文件 ls：`app/msgaudit/`、`app/pipelines/`、`docs/`、`PHASE2_PLAN.md`，把骨架代码和文档过一遍，理解我留的 stub 边界。
 
-如果用户暂时没凭据，**不要往下走真机部分**，等他给。
+### 2. 跟用户确认开通会话存档的进度
+按 `docs/msgaudit_setup.md` 走完后台流程：
+- 企业认证
+- 购买聊天内容存档功能
+- 后台拿 Secret，写入 `.env` 的 `WECHAT_MSGAUDIT_SECRET`
+- 本地生成 RSA 密钥对，公钥上传后台拿 `publickey_ver`
+- 私钥保存到本地，路径写入 `.env` 的 `RSA_PRIVATE_KEY_PATH`
+- **被存档员工本人**在企业微信 App 内点「同意被存档」
 
-### 2. Phase 1 真机验证（关键）
+**如果用户还没开通，停下来等**。这一步必须用户自己去后台操作，你帮不了。
 
-按 `PHASE1_VERIFY.md` 5 步走完。**特别注意 Step 3**：
+### 3. 选 Python SDK 集成方案
+看 `docs/python_sdk_options.md`，三选一。**默认推荐方案 B**（先试 PyPI 上的第三方包，failback 到 A）。
 
-> 用一个微信号在视频号里随便点开一个视频 → 转发给客服号
-> **必须**在日志里看到 channels 消息的完整 raw 体
-> **必须**把这个 raw 消息保存到 `tests/fixtures/sample_channels_msg.json` 替换占位
+### 4. 实现 `app/msgaudit/client.py`
+按所选 SDK 填三个方法（接口已经定义好，不要改签名）：
+- `__init__`
+- `get_chat_data(seq, limit)` → `list[EncryptedChatRecord]`
+- `decrypt(record)` → `dict`
 
-为什么 Step 3 关键？因为 `app/handlers.py:_handle_channels` 当前对字段名（`finder_username` / `nonce_id`）的假设是基于需求文档的推测，**真机数据出来之后必须根据实际字段名修正这一段代码**，否则 Phase 2 解析器拿不到正确的输入。
+写 `tests/test_msgaudit_client.py`，**用 SDK 自带的 demo 密文样本**做单测（C SDK 包里通常有 test_data 目录）。
 
-### 3. Phase 2 — 视频号反查解析器
+### 5. ⭐ 真机 dump
+启动 worker → 让被存档员工的微信号收一条客户发来的：
+- text 消息：验证解密链路通
+- 视频号转发：拿到 sphfeed 真实结构
 
-**只在 Phase 1 完全验证通过、有真机抓包样本之后再开始。**
+worker 日志里 `non_sphfeed_msg` 和 `sphfeed_received` 都会 dump `raw` 字段。**完整复制 sphfeed 那条 raw 到 `tests/fixtures/sample_sphfeed_msg.json`**。
 
-入口：`docs/channels_reverse_eng.md`（占位文档）。
-唯一改动点：`app/channels_parser.py:parse_channels_video()` 函数体。
-调用方（`handlers._handle_channels`）无需改。
+### 6. 修正 sphfeed 字段假设
+基于 Step 5 的真机 dump，重写 `app/msgaudit/models.py:parse_sphfeed`：
+- 真实字段名（`finder_username` 还是其他？`nonce_id` 还是 `feed_id`？`url` 是不是直接 mp4？）
+- 字段在 envelope 里的路径
 
----
+### 7. 决定要不要做 Phase 2 视频号反查
+- **sphfeed 直接给 mp4 url** → `pipelines/sphfeed_to_lark.py` 直接用，跳过 channels_parser
+- **只给 finder_username + nonce_id** → 实现 `app/channels_parser.py:parse_channels_video`，参考 `docs/channels_reverse_eng.md`
 
-## 不能干的事（禁忌清单）
+### 8. 端到端验证
+1. 客户从手机微信转发视频号给员工
+2. worker 日志：sphfeed 解密成功
+3. transcribe.py 跑通
+4. 飞书文档创建成功
+5. 飞书私信收到通知（`LARK_USER_OPEN_ID`）
 
-这些是用户在 spec 里反复强调的、**踩坑必出问题**的边界：
+### 9. 守护进程化
+配 systemd / supervisor，详见 `PHASE2_PLAN.md` Step 8。
 
-1. ❌ **不要凭记忆写视频号反查接口**。Phase 2 必须基于真机抓包（mitmproxy / Charles），所有接口路径、签名算法、必备 header 都要有实际证据。
-2. ❌ **不要凭记忆改企业微信 API 路径和字段**。当前 `kf_client.py` 用的是 spec 里指定的 3 个 URL；如果你想加新接口，先开 fetch 工具查官方文档。
-3. ❌ **不要在没真机抓包前修改 `_handle_channels` 的字段名假设**。先看真实日志再改。
-4. ❌ **不要把 callback 主路径改成同步处理**。企业微信 5s 不响应会重试 3 次，必须立刻返回 'success'，业务全走 BackgroundTasks。
-5. ❌ **不要把 secret 写进代码或 commit**。`.env` 已经在 `.gitignore` 里。
-6. ❌ **不要去掉 origin=3 检查**。客服自己发的消息（origin=4）必须跳过，否则会无限循环回复自己。
-7. ❌ **不要把 `state.json` 拿出来 commit**。它是运行时数据，已 gitignore。
+## 不能干的事（禁忌）
 
-## 重要文件 / 行号指引
+1. ❌ **不要凭记忆写 SDK 调用** — 必须看官方头文件 / 第三方包文档
+2. ❌ **不要在没真机 dump 之前修 `parse_sphfeed`** 字段
+3. ❌ **不要凭记忆写视频号反查接口** — 必须真机抓包腾讯接口（`docs/channels_reverse_eng.md`）
+4. ❌ **不要用会话存档去"自动回复客户"** — 红线，会被腾讯封号
+5. ❌ **不要把 worker 改成 webhook 模式** — 会话存档没有 push，只有 pull
+6. ❌ **不要把 SDK 阻塞调用直接放 asyncio 主循环** — 用 `asyncio.to_thread` 包一下
+7. ❌ **不要把 `rsa_private_key.pem` 提交到 git** — `.gitignore` 已加
+8. ❌ **不要删 `_archive/phase1_kf_callback/`** — 留作产品方向回退的备份
 
-| 任务 | 文件 |
-|---|---|
-| Phase 1 真机验证步骤 | `PHASE1_VERIFY.md` |
-| Phase 2 起点（占位） | `docs/channels_reverse_eng.md` |
-| channels 字段名假设 | `app/handlers.py:_handle_channels` |
-| stub 返回（Phase 2 替换点） | `app/channels_parser.py:parse_channels_video` |
-| 配置项清单 | `app/config.py` + `.env.example` |
-| 真机 dump 占位 | `tests/fixtures/sample_channels_msg.json` |
+## 关键文档锚点
 
-## 架构权衡（用户已拍板，不要再争）
+- 会话存档总览：https://developer.work.weixin.qq.com/document/path/91774
+- 使用前帮助：https://developer.work.weixin.qq.com/document/path/91361
+- 常见问题：https://developer.work.weixin.qq.com/document/path/91552
 
-- **不用数据库**：游标 + msgid 用 JSON 文件持久化，单实例够用。
-- **BackgroundTasks 而不是 Celery**：当前规模不需要 task queue。如果 Phase 2 之后单次回调处理 > 5s 才考虑升级。
-- **loguru JSON 日志**：方便后续接日志聚合。
-- **httpx + asyncio**：因为 FastAPI 原生 async，统一异步栈。
-- **pycryptodome 而不是 cryptography**：和企业微信官方 demo 一致。
+## 用户偏好（从 ~/.claude/CLAUDE.md 同步）
 
-## 常用命令
-
-```bash
-# 跑测试
-python3 -m pytest -v                      # 全部
-python3 -m pytest tests/test_crypto.py    # 单文件
-
-# 启动服务（本地开发）
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-
-# 暴露公网（需先安装 ngrok）
-ngrok http 8000
-
-# 看日志（loguru 输出 JSON 行到 stderr）
-uvicorn app.main:app 2>&1 | tee server.log
-
-# 实时格式化日志（可选）
-uvicorn app.main:app 2>&1 | python3 -c "
-import json, sys
-for line in sys.stdin:
-    try: d = json.loads(line); print(f\"[{d['record']['level']['name']:7}] {d['record']['message']}\")
-    except: print(line, end='')
-"
-```
+- 简体中文回复，思考过程也用中文
+- 紧凑段落、少用 `##` 嵌套深的标题
+- 长任务用 TodoWrite 跟踪进度
+- 提交 git 前不主动建 PR
+- commit message 用中文
+- 文件路径用反引号包裹
 
 ## 如果你有疑问
 
 按这个顺序自查：
-1. 先翻代码（每个文件都有 module docstring 和函数注释）
-2. 再翻 `PHASE1_VERIFY.md` / `README.md` / `docs/channels_reverse_eng.md`
-3. 还不清楚就**停下来问用户**，不要乱猜
-
----
-
-**最后一条**：用户偏好简体中文回复 + 紧凑段落 + 不主动建 PR + commit message 中文。详见 `~/.claude/CLAUDE.md`（如果在他本地能看到的话）。
+1. 翻代码（每个文件都有 module docstring 和函数注释）
+2. 翻 `PHASE2_PLAN.md` / `docs/*.md`
+3. 翻 `_archive/phase1_kf_callback/PHASE1_VERIFY.md`（看历史决策的上下文）
+4. 还不清楚就**停下来问用户**，别乱猜

@@ -147,16 +147,40 @@ DOC_URL="https://jmhm92ilup.feishu.cn/wiki/$NODE_TOKEN"
 rm -f ~/feishu_article.md
 ```
 
-### Step 4.7：在父节点正文里追加目录条目（链接 + 引用预览）
+### Step 4.7：在父节点正文里追加目录条目（编号 H3 + 简介 + 子文档卡片）
 
-虽然子节点已经在 wiki 树里挂着，但用户希望在父节点正文中维护一份带预览的目录，扫一眼就知道每条讲什么。
+父节点正文里维护一份带预览的目录，**用户钦定的格式**：
+
+```markdown
+### N.<标题>
+
+<开头 80-120 字简介，普通段落，不带 > 引用>
+
+<mention-doc token="<子文档node_token>" type="wiki"><标题></mention-doc>
+```
+
+要点：
+- **`### N.`** — H3 标题加编号点号（如 `### 1.王朔：80年代最亮的灯塔`），编号是当前父文档已有条目数 +1
+- **简介** — 转录稿开头 80-120 字到自然句末（普通段落，**不要**用 `>` 引用块）
+- **`<mention-doc>` 标签** — 飞书原生子文档卡片，参数 `token=<wiki node_token>`、`type="wiki"`、内文是子文档标题。会渲染成漂亮的卡片块
+- 三块之间用空行分隔
+
+**实操：**
 
 ```bash
-# 取转录稿前 80-120 字作为预览，到第一个句号/问号/感叹号自然截断
+# 4.7.1 拉父节点当前正文，确定下一个编号 N+1
+NEXT_NUM=$(lark-cli docs +fetch --doc SlNsdSpsPonrHrxZmbschfAOngd 2>&1 | python3 -c "
+import json, re, sys
+raw = sys.stdin.read()
+raw = raw[raw.index('{'):raw.rindex('}')+1]
+md = json.loads(raw)['data'].get('markdown','')
+nums = [int(m.group(1)) for m in re.finditer(r'^### (\d+)\.', md, re.MULTILINE)]
+print((max(nums) if nums else 0) + 1)
+")
+
+# 4.7.2 取转录稿前 80-120 字作为简介，到自然句末截断
 PREVIEW=$(python3 -c "
-text = open('<feishu_article 转录稿临时缓存>').read().strip()
-# 在 80~120 字范围内找第一个完整句末
-target = 100
+text = open('/root/feishu_article.md').read().strip()
 end = -1
 for i, ch in enumerate(text):
     if ch in '。？！' and 60 <= i <= 140:
@@ -167,28 +191,30 @@ if end == -1:
 print(text[:end])
 ")
 
-# 写一段 markdown，append 到父节点底层 docx
-cat > ~/parent_append.md <<EOF
+# 4.7.3 拼出 markdown 并追加
+cat > /root/parent_append.md <<EOF
 
-[$TITLE](https://jmhm92ilup.feishu.cn/wiki/$NODE_TOKEN)
+### ${NEXT_NUM}.${TITLE}
 
-> $PREVIEW
+${PREVIEW}
+
+<mention-doc token="${NODE_TOKEN}" type="wiki">${TITLE}</mention-doc>
 
 EOF
 
 cd ~ && lark-cli docs +update \
   --doc SlNsdSpsPonrHrxZmbschfAOngd \
   --mode append \
-  --markdown @parent_append.md
+  --markdown @/root/parent_append.md
 
-rm -f ~/parent_append.md
+rm -f /root/parent_append.md
 ```
 
 **说明**：
-- `SlNsdSpsPonrHrxZmbschfAOngd` 是父 wiki 节点底下绑定的 docx token（已锁定，无需重查）
-- `--mode append` 在父文档末尾追加，不动已有内容
-- 链接用 `wiki/<node_token>` 而非 `docx/<obj_token>`，进入子节点会显示完整 wiki 树
-- 引用预览取 80-120 字，到自然句末截断
+- `SlNsdSpsPonrHrxZmbschfAOngd` 是父 wiki 节点底下绑定的 docx token（已锁定）
+- `<mention-doc token>` 用的是 **wiki node_token**，不是 docx obj_token
+- 编号 N 自动从父文档现有最大值 +1，避免重号
+- 简介就是开头一段，不加 `>`，不加任何样式
 
 ### Step 5：推飞书私信通知
 
@@ -240,11 +266,15 @@ lark-cli im +messages-send --as bot \
 
 打开「高晓松热门口播」wiki 树，会看到 **🔥 高晓松热门口播 → 王朔：八十年代最亮的灯塔** 这条新增子节点。
 
-父节点正文末尾会多一条索引：
+父节点正文末尾会多一条索引（用户钦定格式）：
 ```
-王朔：八十年代最亮的灯塔
+### 2.李宗盛：一句词打磨到凌晨
 
-> 各位朋友大家好咱们聊过很多人很多作品今天不讲别人咱先聊聊我自己我这个人其实挺矛盾的一会儿说自己是有点正经的文化人一会儿又自称捣鼓事儿的老顽童。
+各位朋友大家好咱们今天聊一个我特别敬重的音乐人李宗盛大哥，
+他对于歌词那种近乎偏执的打磨在录音室里能从晚上一直熬到凌晨
+......
+
+📄 李宗盛：一句词打磨到凌晨    （飞书会渲染成子文档卡片）
 ```
 
 打开子文档：

@@ -1,0 +1,16 @@
+{
+  "_comment": "Phase 1 占位样例。Phase 2 之前请用 PHASE1_VERIFY.md Step 3 真机 dump 替换此文件。字段名以真机响应为准。",
+  "msgid": "PLACEHOLDER_REPLACE_WITH_REAL_DUMP",
+  "open_kfid": "wkxxxxx",
+  "external_userid": "wmxxxxx",
+  "send_time": 1714723600,
+  "origin": 3,
+  "msgtype": "channels",
+  "channels": {
+    "title": "什么是正义?",
+    "finder_nickname": "晓谈人物",
+    "finder_username": "v2_xxxxx@finder",
+    "nonce_id": "xxxxx",
+    "url": "..."
+  }
+}

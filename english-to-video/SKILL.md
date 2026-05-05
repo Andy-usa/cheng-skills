@@ -1,7 +1,7 @@
 ---
 name: english-to-video
 description: |
-  把一段英语短文（图片或纯文字均可）转成带 Jenny 女声旁白、慢速清晰朗读、烧录字幕的小学生英语学习视频。
+  把一段英语短文（图片或纯文字均可）转成带 Aria 女声旁白、慢速清晰朗读、烧录字幕的小学生英语学习视频。
   适合小学/初一英语短文，使用蛋仔派对（Eggy Party）Q 萌画风。
   触发词：英语视频、英文视频、生成英语视频、英语短文视频、英文教学视频、把这篇英语做成视频。
   即使用户只是说"做成视频"并附上一段英文（图片 or 文字）也应触发。
@@ -13,7 +13,7 @@ permissions:
 
 # English → Video Skill (v4)
 
-把任意英语短文转成 Q 萌动画视频：**Jenny 女声慢读 + 烧录字幕 + 蛋仔派对 Q 萌人物 + 静态切镜**。
+把任意英语短文转成 Q 萌动画视频：**Aria 女声慢读 + 烧录字幕 + 蛋仔派对 Q 萌人物 + 静态切镜**。
 
 ## 核心理念
 
@@ -21,7 +21,7 @@ permissions:
 - **分镜图既要好玩又要解释内容**：同时承担两个任务——(1) 蛋仔派对的趣味画风（圆滚滚 / 大眼睛 / 糖果色 / 道具夸张），让小朋友想看；(2) 直白地把这一段旁白说的事情画出来（人物、动作、表情、关键道具），让他能"看懂"英语
 - **N 个候选并发生图**：每个分镜并发生 N 张候选（默认 3 张），任意一张成功即可——单点失败不再卡住整体
 - **静态切镜，无 Ken Burns**：缩放/平移会裁掉底部字幕，已禁用
-- **Jenny 慢速旁白**：edge-tts `en-US-JennyNeural` 优先；不可用时自动 fallback 到百炼 Cherry + ffmpeg 减速
+- **Aria 慢速旁白**：edge-tts `en-US-AriaNeural` rate `-30%` 优先（教学场景咬字更清晰）；不可用时自动 fallback 到百炼 Cherry + ffmpeg `atempo=0.77`
 - **审稿步骤**：旁白拆分 + scenes.json 出来后先和用户对一遍再开跑
 
 ## 核心脚本
@@ -177,7 +177,7 @@ python3 .../make_video.py <dir> --json scenes.json --phase images
 python3 .../make_video.py <dir> --json scenes.json --phase tts
 ```
 
-所有句子并发合成。**主**：edge-tts Jenny `-25%`；**备**：百炼 Cherry + ffmpeg `atempo=0.8`（自动切换，无需干预）。
+所有句子并发合成。**主**：edge-tts Aria `-30%`（教学场景咬字优于 Jenny）；**备**：百炼 Cherry + ffmpeg `atempo=0.77`（自动切换，无需干预）。可通过环境变量 `EDGE_TTS_VOICE` / `EDGE_TTS_RATE` 临时切换音色和语速。
 
 ### Step 9：⚠️ QC 分镜图（关键）
 
@@ -219,8 +219,10 @@ python3 .../make_video.py <dir> --json scenes.json --phase video
 
 | 主备 | 引擎 | 声音 | 速度控制 | 何时使用 |
 |---|---|---|---|---|
-| 主 | edge-tts | en-US-JennyNeural | `rate=-25%` | 默认 |
-| 备 | 百炼 qwen3-tts-flash | Cherry | ffmpeg `atempo=0.8` | edge-tts 失败时自动切换 |
+| 主 | edge-tts | en-US-AriaNeural | `rate=-30%` | 默认（教学场景咬字优）|
+| 备 | 百炼 qwen3-tts-flash | Cherry | ffmpeg `atempo=0.77` | edge-tts 失败时自动切换 |
+
+**音色选择思路**：Aria 的 Microsoft 官方定位是 "informational/cheerful"（教学/资讯播报），慢速 `-30%` 时辅音咬字比 Jenny 更清楚，鼻音更少，更适合小学英语听辨。如想换回 Jenny：`EDGE_TTS_VOICE=en-US-JennyNeural EDGE_TTS_RATE=-25% python make_video.py ...`。
 
 edge-tts 失败常见原因：
 

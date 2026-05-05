@@ -46,15 +46,18 @@ from PIL import Image, ImageDraw, ImageFont
 CANVAS_W, CANVAS_H = 1920, 1080
 FPS = 25
 
-# TTS settings — Jenny voice for elementary English learners.
-#   Primary: edge-tts en-US-JennyNeural (best, but Microsoft sometimes 403s
-#            from cloud sandbox IPs).
+# TTS settings — Aria voice for elementary English learners (clearer
+# articulation than Jenny at slow rates; Microsoft tags Aria as
+# informational/teaching).
+#   Primary: edge-tts en-US-AriaNeural at -30% (free, best quality)
+#            (Microsoft sometimes 403s from cloud sandbox IPs.)
 #   Fallback: Bailian qwen3-tts-flash "Cherry" voice (works anywhere DashScope
 #            does), slowed via ffmpeg atempo since Bailian's speed param is no-op.
-TTS_VOICE_EDGE     = "en-US-JennyNeural"
-TTS_RATE_EDGE      = "-25%"
+# Override via env: EDGE_TTS_VOICE / EDGE_TTS_RATE (e.g. EDGE_TTS_VOICE=en-US-JennyNeural)
+TTS_VOICE_EDGE     = os.environ.get("EDGE_TTS_VOICE", "en-US-AriaNeural")
+TTS_RATE_EDGE      = os.environ.get("EDGE_TTS_RATE", "-30%")
 TTS_VOICE_BAILIAN  = "Cherry"
-TTS_TEMPO_BAILIAN  = 0.8     # 0.8x speed via ffmpeg atempo (≈ -25% rate)
+TTS_TEMPO_BAILIAN  = 0.77    # 0.77x speed via ffmpeg atempo (≈ -30% rate, match Aria)
 
 # 即梦 (Dreamina): generation model + resolution
 DRM_MODEL = "5.0"

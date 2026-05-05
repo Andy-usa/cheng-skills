@@ -1,0 +1,3 @@
+AI编程的交付物分两类，能力型交付物和体验型交付物。能力型交付物的本质是Skill，GUI只是分发外壳。先把Skill打磨到位，GUI是后面可选的分发层。
+永远先把Skill打磨健壮，GUI最后再说。
+手机Claude chat负责聊透需求，Claude code负责实现需求

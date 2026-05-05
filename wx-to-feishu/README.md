@@ -94,7 +94,7 @@ launchctl list | grep wx-to-feishu
 |---|---|
 | 转发后无反应 | `curl http://127.0.0.1:5030/api/v1/chatlog?talker=filehelper\&time=今天 \| head` |
 | chatlog 启动报 "key timeout" | 确认 Mac 微信运行；Apple Silicon 用户检查是否 Rosetta 模式 |
-| 公众号抓取失败 | 确认 `wechat-to-lark` skill 的 Playwright 跑得起来 |
+| 公众号抓取失败 | 确认 `weixin-to-feishu` skill 的 Playwright 跑得起来 |
 | 视频号转录失败 | CDN 链接通常几小时过期，重新转发即可 |
 | 写飞书失败 | `lark-cli auth status` 看登录态 |
 | worker 进程没跑起来 | `launchctl list | grep wx-to-feishu`；看 `~/Library/Logs/wx-to-feishu.log` |

@@ -2,7 +2,7 @@
 
 ## 全局目标
 
-**用户在微信里转发视频号给员工 → msgaudit 拉到密文 → 解密 → 提取 sphfeed → 调 wechat-to-lark 转录 → 推飞书私信**。完全不回复客户。
+**用户在微信里转发视频号给员工 → msgaudit 拉到密文 → 解密 → 提取 sphfeed → 调 weixin-to-feishu 转录 → 推飞书私信**。完全不回复客户。
 
 ## 已完成 / 待完成
 
@@ -64,7 +64,7 @@
 ### Step 7: 端到端验证
 1. 客户从手机微信转发视频号给员工
 2. worker 日志看到 sphfeed 解密成功
-3. transcribe.py 跑通（依赖 `~/cheng-skills/wechat-to-lark/scripts/transcribe.py` 在本机）
+3. transcribe.py 跑通（依赖 `~/cheng-skills/weixin-to-feishu/scripts/transcribe.py` 在本机）
 4. 飞书文档创建成功
 5. 飞书私信收到通知
 

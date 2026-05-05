@@ -10,7 +10,7 @@
 
 Phase 1 走的是「企业微信微信客服」回调路径。但用户实测发现：**微信原生的"转发"菜单里找不到微信客服会话**（微信客服没有独立聊天入口，要从企业微信小程序进），所以客户根本没法把视频号视频转发给微信客服号。
 
-**真正可行的路径**：让员工的企业微信号作为"客户联系"普通好友，客户转发到员工 → 用「**会话内容存档（msgaudit）**」拿到消息密文 → 解密 → 拉视频号信息 → 调 wechat-to-lark 转录。
+**真正可行的路径**：让员工的企业微信号作为"客户联系"普通好友，客户转发到员工 → 用「**会话内容存档（msgaudit）**」拿到消息密文 → 解密 → 拉视频号信息 → 调 weixin-to-feishu 转录。
 
 **一个关键约束**：会话存档**只能"读"，不能"代替员工回复客户"**——这是腾讯的红线。所以产品定位也变了：不再回复客户，转录结果直接推飞书私信给运营者本人（用户：程万云）。
 
@@ -18,7 +18,7 @@ Phase 1 走的是「企业微信微信客服」回调路径。但用户实测发
 
 - **名字**：wechat-channels-parser
 - **现版本**：0.2.0（v1 归档；v2 重新搭骨架，等本地 SDK 集成）
-- **目的**：客户给员工发视频号 → msgaudit 解出 sphfeed → 调 wechat-to-lark 转录到飞书
+- **目的**：客户给员工发视频号 → msgaudit 解出 sphfeed → 调 weixin-to-feishu 转录到飞书
 - **不再做**：回复客户、即时双向对话
 
 ## 现状
@@ -31,7 +31,7 @@ Phase 1 走的是「企业微信微信客服」回调路径。但用户实测发
 | `app/msgaudit/models.py` | ⚠️ **Stub**：sphfeed 字段名是猜的，**真机 dump 后改** |
 | `app/msgaudit/client.py` | ⚠️ **Stub**：等本地选 SDK（`docs/python_sdk_options.md`） |
 | `app/msgaudit/worker.py` | ✅ 骨架，依赖 client 实现 |
-| `app/pipelines/sphfeed_to_lark.py` | ✅ 骨架，依赖 wechat-to-lark skill 在本机 |
+| `app/pipelines/sphfeed_to_lark.py` | ✅ 骨架，依赖 weixin-to-feishu skill 在本机 |
 | 会话存档开通 | ❌ 用户必须人工去后台搞（认证 + 付费 + 上传公钥 + 员工授权） |
 | 真机 dump sphfeed 样本 | ❌ Step 4，开通后第一件事 |
 | Phase 2 视频号反查 | ❌ 仅当 sphfeed 不直接给 mp4 url 才需要 |

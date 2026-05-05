@@ -31,10 +31,10 @@ description: |
 
 ## 工作流（6 步）
 
-### Step 1：转录（复用 wechat-to-lark）
+### Step 1：转录（复用 weixin-to-feishu）
 
 ```bash
-python3 ~/cheng-skills/wechat-to-lark/scripts/transcribe.py "<视频URL>"
+python3 ~/cheng-skills/weixin-to-feishu/scripts/transcribe.py "<视频URL>"
 ```
 
 返回 JSON：`{"ok": true, "text": "...", "elapsed": 12.3}`。
@@ -281,7 +281,7 @@ lark-cli im +messages-send --as bot \
 
 ## 依赖
 
-- `python3 ~/cheng-skills/wechat-to-lark/scripts/transcribe.py`（视频转录）
+- `python3 ~/cheng-skills/weixin-to-feishu/scripts/transcribe.py`（视频转录）
 - `python3 ~/cheng-skills/xiaosong-to-feishu/scripts/extract_user_image.py`（从 session jsonl 提取用户上传的截图，自动落地）
 - `lark-cli`（user-level OAuth 已持久化）
 - 环境变量 `DASHSCOPE_API_KEY`

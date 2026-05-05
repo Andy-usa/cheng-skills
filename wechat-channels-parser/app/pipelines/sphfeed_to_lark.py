@@ -1,9 +1,9 @@
-"""sphfeed → 视频号反查 → wechat-to-lark 转录 → 推飞书。
+"""sphfeed → 视频号反查 → weixin-to-feishu 转录 → 推飞书。
 
 调用链：
     1. sphfeed envelope 拿到 finder_username / nonce_id（或直接 url）
     2. 如果有 mp4 url 直接走 transcribe.py；否则调 channels_parser.parse_channels_video 反查
-    3. 拿 wechat-to-lark/scripts/transcribe.py 跑转写
+    3. 拿 weixin-to-feishu/scripts/transcribe.py 跑转写
     4. lark-cli docs +create + +update 写飞书文档
     5. lark-cli im +messages-send 推私信通知
 
@@ -23,8 +23,8 @@ from app.config import get_settings
 from app.msgaudit.models import MsgAuditEnvelope, SphfeedMessage
 from app.utils.logger import logger
 
-# 假设 wechat-to-lark skill 与本项目并列 clone：~/cheng-skills/wechat-to-lark/
-WECHAT_TO_LARK_TRANSCRIBE = Path("~/cheng-skills/wechat-to-lark/scripts/transcribe.py").expanduser()
+# 假设 weixin-to-feishu skill 与本项目并列 clone：~/cheng-skills/weixin-to-feishu/
+WEIXIN_TO_FEISHU_TRANSCRIBE = Path("~/cheng-skills/weixin-to-feishu/scripts/transcribe.py").expanduser()
 
 
 async def handle_sphfeed(envelope: MsgAuditEnvelope, sphfeed: SphfeedMessage) -> None:
@@ -81,12 +81,12 @@ async def handle_sphfeed(envelope: MsgAuditEnvelope, sphfeed: SphfeedMessage) ->
 
 
 # ────────────────────────────────────────────────────────────────────────────
-# 辅助函数（stub 级别 — 本地接手时根据 wechat-to-lark skill 实际接口调）
+# 辅助函数（stub 级别 — 本地接手时根据 weixin-to-feishu skill 实际接口调）
 
 async def _run_transcribe(video_url: str) -> str:
-    """跑 wechat-to-lark/scripts/transcribe.py，返回转写文本。"""
+    """跑 weixin-to-feishu/scripts/transcribe.py，返回转写文本。"""
     proc = await asyncio.create_subprocess_exec(
-        "python3", str(WECHAT_TO_LARK_TRANSCRIBE), video_url,
+        "python3", str(WEIXIN_TO_FEISHU_TRANSCRIBE), video_url,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )

@@ -20,7 +20,7 @@
 [拿到视频号元数据 / mp4 url]
             │
             ▼
-[wechat-to-lark skill]
+[weixin-to-feishu skill]
    • transcribe.py → 阿里云百炼 qwen3-asr-flash 转录
    • lark-cli docs +create / +update → 写飞书文档
    • lark-cli im +messages-send → 推飞书私信通知

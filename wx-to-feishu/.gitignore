@@ -1,0 +1,26 @@
+# 环境变量（含飞书凭据等）
+.env
+
+# 运行时状态
+data/state.db
+data/state.db-journal
+data/state.db-wal
+data/state.db-shm
+data/*.log
+data/cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.venv/
+venv/
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+.DS_Store
